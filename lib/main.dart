@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:market_salla/provider/sallastate.dart';
-import 'package:market_salla/screens/routing/splash.dart';
+import 'package:market_salla/screens/routing/main_screen.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-        home:Splash(),
+        home:MainScreen(),
       ),
     );
   }
