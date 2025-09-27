@@ -10,8 +10,11 @@ class Sallastate with ChangeNotifier {
   }
 
   removeindex(Products product) {
-    salla.remove(product);
-    notifyListeners();
+    int lastIndex = salla.lastIndexOf(product);
+    if (lastIndex != -1) {
+      salla.removeAt(lastIndex);
+      notifyListeners();
+    }
   }
 
   totalpayment() {
