@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:market_salla/provider/sallastate.dart';
 import 'package:market_salla/screens/icons/cart.dart';
-
 import 'package:market_salla/shared/sectionname.dart';
 import 'package:market_salla/widgets/category.dart';
 import 'package:market_salla/widgets/dialog_seeall.dart';

@@ -1,6 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:market_salla/provider/sallastate.dart';
+import 'package:market_salla/widgets/card.dart';
 import 'package:provider/provider.dart';
 
 class Favorite extends StatefulWidget {
@@ -54,89 +54,13 @@ class _FavoriteState extends State<Favorite> {
                       itemCount: instance.favorite.length,
                       itemBuilder: (context, index) {
                         final product = instance.favorite[index];
-                        final unfavorite = instance.favorite.contains(product);
 
-                        return Card(
-                          color: Colors.white,
-                          margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.fromLTRB(10, 5, 10, 5),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  height: 90,
-                                  width: width * 0.25,
-                                  child: Image.asset(
-                                    product.image,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      AutoSizeText(
-                                        product.name,
-                                        style: TextStyle(
-                                          color: const Color.fromARGB(
-                                            255,
-                                            31,
-                                            30,
-                                            30,
-                                          ),
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        maxLines: 1,
-                                        minFontSize: 9,
-                                      ),
-                                      Text(
-                                        product.price,
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                IconButton(
-                                  onPressed: () {
-                                    unfavorite
-                                        ? instance.unfavorite(product)
-                                        : instance.addfavouite(product);
-                                  },
-                                  icon: unfavorite
-                                      ? Icon(
-                                          Icons.favorite,
-                                          color: Colors.green,
-                                        )
-                                      : Icon(
-                                          Icons.favorite_border_outlined,
-                                          color: const Color.fromARGB(
-                                            255,
-                                            35,
-                                            36,
-                                            35,
-                                          ),
-                                        ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        return Sahredcard(
+                          width: width * 0.25,
+                          product: product,
+                          fontsize: 13,
+                          minfontsize: 9,
+                          isFavorite: true,
                         );
                       },
                     )

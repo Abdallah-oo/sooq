@@ -33,12 +33,7 @@ class _CustomproductState extends State<Customproduct> {
               AddandDelete(
                 product: product,
                 amount: amount,
-                onAdd: () {
-                  instance.addtolist(product);
-                },
-                onRemove: () {
-                  instance.removeindex(product);
-                },
+              
               ),
               SizedBox(height: 7),
               Text(

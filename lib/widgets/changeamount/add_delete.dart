@@ -7,13 +7,11 @@ class AddandDelete extends StatelessWidget {
     super.key,
     required this.product,
     required this.amount,
-    required this.onAdd,
-    required this.onRemove,
+  
   });
   final int amount;
   final Products product;
-  final VoidCallback onAdd;
-  final VoidCallback onRemove;
+
 
   @override
   Widget build(BuildContext context) {
