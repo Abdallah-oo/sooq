@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:market_salla/models/products_model.dart';
 import 'package:market_salla/provider/sallastate.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class _SallacardState extends State<Sallacard> {
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
     final isFavorite = instance.favorite.contains(widget.product);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
 
     return Card(
       color: Colors.white,
@@ -37,33 +40,36 @@ class _SallacardState extends State<Sallacard> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-              height: 120,
-              width: 150,
+              height: 90,
+              width: width*0.25,
               child: Image.asset(widget.product.image, fit: BoxFit.contain),
             ),
             SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.product.name,
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 31, 30, 30),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AutoSizeText(
+                    widget.product.name,
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 31, 30, 30),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    minFontSize: 9, // أصغر حجم خط يمكن أن يصل إليه
                   ),
-                ),
-                Text(
-                  widget.product.price,
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    widget.product.price,
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Spacer(),
             Column(
               children: [
                 IconButton(

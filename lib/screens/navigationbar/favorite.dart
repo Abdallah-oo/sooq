@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:market_salla/provider/sallastate.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,8 @@ class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -26,15 +29,15 @@ class _FavoriteState extends State<Favorite> {
           child: Row(
             children: [
               Icon(
-                Icons.favorite_rounded,
-                color: const Color.fromARGB(255, 6, 66, 8),
+                Icons.favorite_border_outlined,
+                color: const Color.fromARGB(255, 32, 32, 32),
               ),
 
               SizedBox(width: 10),
               Text(
                 "favorite products",
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 42, 44, 42),
+                  color: const Color.fromARGB(255, 25, 26, 25),
                   fontSize: 18,
                 ),
               ),
@@ -70,41 +73,45 @@ class _FavoriteState extends State<Favorite> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  height: 120,
-                                  width: 150,
+                                  height: 90,
+                                  width: width * 0.25,
                                   child: Image.asset(
                                     product.image,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
                                 SizedBox(width: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.name,
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          31,
-                                          30,
-                                          30,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AutoSizeText(
+                                        product.name,
+                                        style: TextStyle(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            31,
+                                            30,
+                                            30,
+                                          ),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                        maxLines: 1,
+                                        minFontSize: 9,
                                       ),
-                                    ),
-                                    Text(
-                                      product.price,
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w400,
+                                      Text(
+                                        product.price,
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                Spacer(),
 
                                 IconButton(
                                   onPressed: () {

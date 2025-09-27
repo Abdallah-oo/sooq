@@ -17,11 +17,14 @@ class AddandDelete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+     
+    final width = size.width;
     return Stack(
       children: [
         Container(
-          width: 160,
-          height: 147,
+          width: width*0.344,
+          height: 130,
           decoration: BoxDecoration(
             color: Color(0xffF6F6F6),
             borderRadius: BorderRadius.circular(10),

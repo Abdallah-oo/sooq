@@ -33,12 +33,12 @@ class Profile extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Zizo Mohamed', // Placeholder name
+              'Tabanja', // Placeholder name
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
-              'zizo.mohamed@example.com', // Placeholder email
+              'tabanja@gmail.com', // Placeholder email
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 20),

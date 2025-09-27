@@ -40,6 +40,7 @@ dependencies:
   carousel_slider: ^5.1.1
   provider: ^6.1.5+1
   flutter_native_splash: ^2.4.6
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

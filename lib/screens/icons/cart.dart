@@ -60,9 +60,7 @@ class _CartState extends State<Cart> {
                           padding: const EdgeInsets.only(right: 20),
                           child: TextButton(
                             onPressed: () {
-                              setState(() {
-                                instance.salla.clear();
-                              });
+                              instance.clearcart();
                             },
                             child: Text(
                               "Clear Cart",

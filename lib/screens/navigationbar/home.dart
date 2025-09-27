@@ -28,6 +28,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -105,7 +107,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                 options: CarouselOptions(
-                  height: 222,
+                  height:  width * 0.5,
                   autoPlay: true,
                   autoPlayCurve: Curves.fastOutSlowIn,
                   enlargeCenterPage: true,

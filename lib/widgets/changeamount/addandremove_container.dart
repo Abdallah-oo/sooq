@@ -20,6 +20,7 @@ class _CustomcontainerState extends State<Customcontainer> {
   @override
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
+    
     return widget.amount > 0
         ? Container(
             padding: EdgeInsets.all(7),
@@ -54,14 +55,15 @@ class _CustomcontainerState extends State<Customcontainer> {
               instance.addtolist(widget.product);
             },
             child: Container(
-              height: 38,
-              width: 38,
+              height: 34,
+              width: 34,
               padding: EdgeInsets.all(7),
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 231, 230, 230),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.add, color: Color(0xff000000)),
+              alignment: Alignment.center,
+              child: Icon(Icons.add, color: Color(0xff000000),size: 20,),
             ),
           );
   }

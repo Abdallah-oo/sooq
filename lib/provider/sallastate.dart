@@ -31,4 +31,8 @@ class Sallastate with ChangeNotifier {
     favorite.remove(product);
     notifyListeners();
   }
+  clearcart(){
+    salla.clear();
+    notifyListeners();
+  }
 }

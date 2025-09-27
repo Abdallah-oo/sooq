@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:market_salla/provider/sallastate.dart';
 import 'package:market_salla/shared/products.dart';
@@ -89,6 +90,8 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -169,22 +172,22 @@ class _SearchState extends State<Search> {
                       }),
 
                       SizedBox(width: 10),
-                      if(selectedIndex != null)
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            filtersearch.clear();
-                            selectedIndex = null;
-                          });
-                        },
-                        child: Text(
-                          "clear",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w400,
+                      if (selectedIndex != null)
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              filtersearch.clear();
+                              selectedIndex = null;
+                            });
+                          },
+                          child: Text(
+                            "clear",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -230,7 +233,7 @@ class _SearchState extends State<Search> {
                                           ),
                                         ),
                                         height: 90,
-                                        width: 90,
+                                        width: width * 0.25,
                                         child: Image.asset(
                                           product.image,
                                           fit: BoxFit.contain,
@@ -242,13 +245,21 @@ class _SearchState extends State<Search> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
+                                            AutoSizeText(
                                               product.name,
-                                              style: const TextStyle(
-                                                fontSize: 16,
+                                              style: TextStyle(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  31,
+                                                  30,
+                                                  30,
+                                                ),
+                                                fontSize: 13,
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                              minFontSize:
+                                                  9, // أصغر حجم خط يمكن أن يصل إليه
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
@@ -261,7 +272,7 @@ class _SearchState extends State<Search> {
                                           ],
                                         ),
                                       ),
-                                      const Spacer(),
+
                                       Customcontainer(
                                         product: product,
                                         amount: amount,

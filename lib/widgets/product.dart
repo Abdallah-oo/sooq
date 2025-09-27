@@ -18,7 +18,8 @@ class _CustomproductState extends State<Customproduct> {
   @override
   Widget build(BuildContext context) {
     final instance = Provider.of<Sallastate>(context);
-    final sections = sectionsOfProducts; // Access the static list
+    final sections = sectionsOfProducts;
+    
     return Row( // Access the static list
       children: List.generate(sections[widget.selectedIndex].length, (index) {
         final product = sections[widget.selectedIndex][index];
