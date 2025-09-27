@@ -10,12 +10,12 @@ class CategorySearch extends StatelessWidget {
   final Function(int?, String?) onCategorySelected;
 
   final List<String> category = const [
-    "cheese",
-    "shrimp",
-    "fish",
-    "meat",
-    "milk",
-    "washing",
+    'cheese',
+    'shrimp',
+    'fish',
+    'meat',
+    'milk',
+    'washing',
   ];
   ontapcategory(int index, String currentCategory) {
     if (selectedIndex == index) {
@@ -64,14 +64,14 @@ class CategorySearch extends StatelessWidget {
             );
           }),
 
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           if (selectedIndex != null)
             TextButton(
               onPressed: () {
                 onCategorySelected(null, null);
               },
-              child: Text(
-                "clear",
+              child: const Text(
+                'clear',
                 style: TextStyle(
                   color: Colors.red,
                   fontWeight: FontWeight.w400,

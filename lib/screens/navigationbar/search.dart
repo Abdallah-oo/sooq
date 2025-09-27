@@ -97,18 +97,18 @@ class _SearchState extends State<Search> {
                   searchController: _searchController,
                   onChanged: (value) => resultOfSearch(value),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 CategorySearch(
                   selectedIndex: selectedIndex,
                   onCategorySelected: (index, category) {
                     ontapcategory(index, category);
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(
                   child:
                       filtersearch.isEmpty && _searchController.text.isNotEmpty
-                      ? const Center(child: Text("No products found."))
+                      ? const Center(child: Text('No products found.'))
                       : Expanded(
                           child: ListView.builder(
                             itemCount: filtersearch.length,

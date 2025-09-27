@@ -21,23 +21,23 @@ class _CartState extends State<Cart> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         leadingWidth: 0,
-        leading: SizedBox.shrink(),
+        leading: const SizedBox.shrink(),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
               Image.asset(
-                "assets/img/icons/basket.png",
+                'assets/img/icons/basket.png',
                 color: const Color.fromARGB(255, 19, 85, 21),
 
                 width: 25,
               ),
-              SizedBox(width: 10),
-              Text("Cart"),
-              Spacer(),
+              const SizedBox(width: 10),
+              const Text('Cart'),
+              const Spacer(),
               Text(
-                "pay: \$ ${instance.totalpayment()} ",
-                style: TextStyle(
+                'pay: \$ ${instance.totalpayment()} ',
+                style: const TextStyle(
                   color: Colors.green,
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -53,7 +53,7 @@ class _CartState extends State<Cart> {
             instance.salla.isNotEmpty
                 ? Column(
                     children: [
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Padding(
@@ -62,8 +62,8 @@ class _CartState extends State<Cart> {
                             onPressed: () {
                               instance.clearcart();
                             },
-                            child: Text(
-                              "Clear Cart",
+                            child: const Text(
+                              'Clear Cart',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.w400,
@@ -74,8 +74,8 @@ class _CartState extends State<Cart> {
                       ),
                     ],
                   )
-                : SizedBox.shrink(),
-            SizedBox(height: 10),
+                : const SizedBox.shrink(),
+            const SizedBox(height: 10),
             Expanded(
               child: uniqueSalla.isNotEmpty
                   ? ListView.builder(
@@ -92,26 +92,26 @@ class _CartState extends State<Cart> {
                         );
                       },
                     )
-                  : Center(
+                  : const Center(
                       child: Text(
-                        "No Items In Cart Yet..",
+                        'No Items In Cart Yet..',
                         style: TextStyle(
                           fontSize: 14,
-                          color: const Color.fromARGB(221, 95, 92, 92),
+                          color: Color.fromARGB(221, 95, 92, 92),
                         ),
                       ),
                     ),
             ),
             Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               color: const Color.fromARGB(255, 15, 90, 15),
               width: 100,
-              child: Center(
+              child: const Center(
                 child: Text(
-                  "Payment",
+                  'Payment',
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 248, 247, 247),
+                    color: Color.fromARGB(255, 248, 247, 247),
                     fontSize: 20,
                   ),
                 ),

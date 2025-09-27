@@ -24,7 +24,7 @@ class AddandDelete extends StatelessWidget {
           width: width*0.344,
           height: 130,
           decoration: BoxDecoration(
-            color: Color(0xffF6F6F6),
+            color: const Color(0xffF6F6F6),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Image.asset(product.image, fit: BoxFit.contain),

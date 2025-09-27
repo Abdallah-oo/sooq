@@ -23,10 +23,10 @@ class _CustomcontainerState extends State<Customcontainer> {
     
     return widget.amount > 0
         ? Container(
-            padding: EdgeInsets.all(7),
+            padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(22),
-              color: Color.fromARGB(255, 231, 230, 230),
+              color: const Color.fromARGB(255, 231, 230, 230),
             ),
             child: Row(
               children: [
@@ -35,17 +35,17 @@ class _CustomcontainerState extends State<Customcontainer> {
                     instance.removeindex(widget.product);
                   },
                   child: widget.amount > 1
-                      ? Icon(Icons.remove)
-                      : Icon(Icons.delete_outline_rounded),
+                      ? const Icon(Icons.remove)
+                      : const Icon(Icons.delete_outline_rounded),
                 ),
-                SizedBox(width: 3),
+                const SizedBox(width: 3),
                 Text(widget.amount.toString()),
-                SizedBox(width: 3),
+                const SizedBox(width: 3),
                 GestureDetector(
                   onTap: () {
                     instance.addtolist(widget.product);
                   },
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ],
             ),
@@ -57,13 +57,13 @@ class _CustomcontainerState extends State<Customcontainer> {
             child: Container(
               height: 34,
               width: 34,
-              padding: EdgeInsets.all(7),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(7),
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 231, 230, 230),
                 shape: BoxShape.circle,
               ),
               alignment: Alignment.center,
-              child: Icon(Icons.add, color: Color(0xff000000),size: 20,),
+              child: const Icon(Icons.add, color: Color(0xff000000),size: 20,),
             ),
           );
   }

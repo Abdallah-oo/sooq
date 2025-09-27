@@ -35,10 +35,10 @@ class _CustomproductState extends State<Customproduct> {
                 amount: amount,
               
               ),
-              SizedBox(height: 7),
+              const SizedBox(height: 7),
               Text(
                 product.name,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xff000000),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -46,18 +46,18 @@ class _CustomproductState extends State<Customproduct> {
               ),
               Row(
                 children: [
-                  Image.asset("assets/img/icons/Vector.png", width: 20),
-                  SizedBox(width: 5),
+                  Image.asset('assets/img/icons/Vector.png', width: 20),
+                  const SizedBox(width: 5),
                   Text(
-                    "${product.rate} (${product.votes})",
-                    style: TextStyle(fontSize: 14, color: Color(0xff000000)),
+                    '${product.rate} (${product.votes})',
+                    style: const TextStyle(fontSize: 14, color: Color(0xff000000)),
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
                 product.price,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xff000000),
                   fontSize: 16,
                   fontWeight: FontWeight.w600,

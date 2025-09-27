@@ -17,10 +17,10 @@ class _CustomcategoryState extends State<Customcategory> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
+        const Padding(
+          padding: EdgeInsets.only(right: 10),
           child: Text(
-            "Sections",
+            'Sections',
             style: TextStyle(
               fontSize: 19,
               color: Color.fromARGB(255, 8, 8, 8),
@@ -28,7 +28,7 @@ class _CustomcategoryState extends State<Customcategory> {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Row(
           children: List.generate(itemslist.length, (index) {
             return Padding(
@@ -45,8 +45,8 @@ class _CustomcategoryState extends State<Customcategory> {
                     child: Container(
                       height: 90,
                       width: 90,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(5),
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Color(0xffF6F6F6),
                       ),
@@ -56,16 +56,16 @@ class _CustomcategoryState extends State<Customcategory> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Text(
                     itemslist[index].name,
                     style: select == index
-                        ? TextStyle(
+                        ? const TextStyle(
                             fontSize: 16,
                             color: Color.fromARGB(255, 38, 199, 6),
                             fontWeight: FontWeight.bold,
                           )
-                        : TextStyle(fontSize: 13, color: Color(0xff5a5555)),
+                        : const TextStyle(fontSize: 13, color: Color(0xff5a5555)),
                   ),
                 ],
               ),

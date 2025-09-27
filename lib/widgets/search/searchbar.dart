@@ -33,12 +33,12 @@ class _SearchbarState extends State<Searchbar> {
                 ),
                 onPressed: () => widget.searchController.clear(),
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         filled: true,
         fillColor: const Color.fromARGB(255, 245, 244, 244),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromARGB(255, 192, 191, 191),
+            color: Color.fromARGB(255, 192, 191, 191),
           ),
         ),
         border: OutlineInputBorder(

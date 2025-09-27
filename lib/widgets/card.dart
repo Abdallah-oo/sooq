@@ -28,22 +28,22 @@ class Sahredcard extends StatelessWidget {
     final instance = Provider.of<Sallastate>(context);
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
       child: Padding(
-        padding: EdgeInsetsGeometry.fromLTRB(10, 5, 10, 5),
+        padding: const EdgeInsetsGeometry.fromLTRB(10, 5, 10, 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
               height: 90,
               width: width,
               child: Image.asset(product.image, fit: BoxFit.contain),
             ),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +60,7 @@ class Sahredcard extends StatelessWidget {
                   ),
                   Text(
                     product.price,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.green,
                       fontSize: 11,
                       fontWeight: FontWeight.w400,
@@ -72,7 +72,7 @@ class Sahredcard extends StatelessWidget {
             Column(
               children: [
                 isFavorite == null
-                    ? SizedBox.shrink()
+                    ? const SizedBox.shrink()
                     : IconButton(
                         onPressed: () {
                           if (isFavorite!) {
@@ -85,7 +85,7 @@ class Sahredcard extends StatelessWidget {
                             ? const Icon(Icons.favorite, color: Colors.green)
                             : const Icon(Icons.favorite_border_outlined),
                       ),
-                trallingwidget == null ? SizedBox.shrink() : trallingwidget!,
+                trallingwidget == null ? const SizedBox.shrink() : trallingwidget!,
               ],
             ),
           ],

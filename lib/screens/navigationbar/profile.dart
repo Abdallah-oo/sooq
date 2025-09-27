@@ -57,9 +57,9 @@ class Profile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: const Color.fromARGB(179, 134, 134, 134),
+            color: Color.fromARGB(179, 134, 134, 134),
             spreadRadius: 1,
             blurRadius: 5,
           ),

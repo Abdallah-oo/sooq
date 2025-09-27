@@ -10,17 +10,17 @@ class ButtomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, IconData>> icons = [
-      {"select": Icons.home_filled, "unselect": Icons.home_outlined},
-      {"select": Icons.favorite, "unselect": Icons.favorite_outline},
-      {"select": Icons.search, "unselect": Icons.search_outlined},
-      {"select": Icons.person, "unselect": Icons.person_outline_sharp},
-      {"select": Icons.menu, "unselect": Icons.menu_outlined},
+      {'select': Icons.home_filled, 'unselect': Icons.home_outlined},
+      {'select': Icons.favorite, 'unselect': Icons.favorite_outline},
+      {'select': Icons.search, 'unselect': Icons.search_outlined},
+      {'select': Icons.person, 'unselect': Icons.person_outline_sharp},
+      {'select': Icons.menu, 'unselect': Icons.menu_outlined},
     ];
     return Container(
-      padding: EdgeInsets.fromLTRB(15, 17, 15, 0),
+      padding: const EdgeInsets.fromLTRB(15, 17, 15, 0),
       height: 100,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 248, 248, 248),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 248, 248, 248),
         borderRadius: BorderRadiusDirectional.only(
           topStart: Radius.circular(30),
           topEnd: Radius.circular(30),
@@ -39,8 +39,8 @@ class ButtomNavigation extends StatelessWidget {
                 },
                 icon: Icon(
                   selectedIndex == index
-                      ? icons[index]["select"]
-                      : icons[index]["unselect"],
+                      ? icons[index]['select']
+                      : icons[index]['unselect'],
                   size: 28,
                   color: selectedIndex == index
                       ? const Color.fromARGB(255, 32, 184, 18)
@@ -57,7 +57,7 @@ class ButtomNavigation extends StatelessWidget {
                         color: const Color.fromARGB(255, 19, 192, 34),
                       ),
                     )
-                  : SizedBox.shrink(),
+                  : const SizedBox.shrink(),
             ],
           );
         }),

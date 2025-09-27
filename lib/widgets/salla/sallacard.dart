@@ -33,17 +33,17 @@ class _SallacardState extends State<Sallacard> {
       minfontsize: 9,
       amount: widget.amount,
       isFavorite: isFavorite,
-      trallingwidget: Customtralingwidget(),
+      trallingwidget:customtrailing(),
     );
   }
 
-  Widget Customtralingwidget() {
+  Widget customtrailing() {
     final instance = Provider.of<Sallastate>(context);
     return Container(
-      padding: EdgeInsets.all(7),
+      padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        color: Color.fromARGB(255, 245, 244, 244),
+        color: const Color.fromARGB(255, 245, 244, 244),
       ),
       child: Row(
         children: [
@@ -52,17 +52,17 @@ class _SallacardState extends State<Sallacard> {
               instance.removeindex(widget.product);
             },
             child: widget.amount > 1
-                ? Icon(Icons.remove)
-                : Icon(Icons.delete_outline_rounded),
+                ? const Icon(Icons.remove)
+                : const Icon(Icons.delete_outline_rounded),
           ),
-          SizedBox(width: 3),
+          const SizedBox(width: 3),
           Text(widget.amount.toString()),
-          SizedBox(width: 3),
+          const SizedBox(width: 3),
           GestureDetector(
             onTap: () {
               instance.addtolist(widget.product);
             },
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
         ],
       ),

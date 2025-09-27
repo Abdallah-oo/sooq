@@ -23,21 +23,21 @@ class _FavoriteState extends State<Favorite> {
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         leadingWidth: 0,
-        leading: SizedBox.shrink(),
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+        leading: const SizedBox.shrink(),
+        title: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
               Icon(
                 Icons.favorite_border_outlined,
-                color: const Color.fromARGB(255, 32, 32, 32),
+                color: Color.fromARGB(255, 32, 32, 32),
               ),
 
               SizedBox(width: 10),
               Text(
-                "favorite products",
+                'favorite products',
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 25, 26, 25),
+                  color: Color.fromARGB(255, 25, 26, 25),
                   fontSize: 18,
                 ),
               ),
@@ -64,12 +64,12 @@ class _FavoriteState extends State<Favorite> {
                         );
                       },
                     )
-                  : Center(
+                  : const Center(
                       child: Text(
-                        "No favorite product added yet..",
+                        'No favorite product added yet..',
                         style: TextStyle(
                           fontSize: 14,
-                          color: const Color.fromARGB(221, 95, 92, 92),
+                          color: Color.fromARGB(221, 95, 92, 92),
                         ),
                       ),
                     ),
