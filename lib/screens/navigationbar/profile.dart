@@ -1,5 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:market_salla/provider/googlelogin.dart';
+import 'package:provider/provider.dart';
 class Profile extends StatelessWidget {
   const Profile({super.key});
   @override
@@ -51,6 +52,7 @@ class Profile extends StatelessWidget {
   }
 
   Widget _buildProfileMenu(BuildContext context) {
+    final googleSignInProvider = Provider.of<GoogleSignInProvider>(context, listen: false);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
@@ -88,7 +90,8 @@ class Profile extends StatelessWidget {
               title: 'Logout',
               isLogout: true,
               onTap: () async {
-                await FirebaseAuth.instance.signOut();
+                // Sign out from both Google and Firebase
+                await googleSignInProvider.logout();
                 // AuthGate will handle navigation automatically.
               }),
         ],

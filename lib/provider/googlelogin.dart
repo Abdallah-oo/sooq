@@ -43,4 +43,13 @@ class GoogleSignInProvider with ChangeNotifier {
       return null;
     }
   }
+  Future<void> logout() async {
+  // This is the crucial part to sign out from Google
+  await GoogleSignIn().signOut(); 
+  
+  // Then sign out from Firebase
+  await FirebaseAuth.instance.signOut();
+  
+  notifyListeners();
+}
 }
