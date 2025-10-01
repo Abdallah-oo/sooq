@@ -109,28 +109,26 @@ class _SearchState extends State<Search> {
                   child:
                       filtersearch.isEmpty && _searchController.text.isNotEmpty
                       ? const Center(child: Text('No products found.'))
-                      : Expanded(
-                          child: ListView.builder(
-                            itemCount: filtersearch.length,
-                            itemBuilder: (context, index) {
-                              final product = filtersearch[index];
-                              final amount = instance.salla.where((item) {
-                                return item == product;
-                              }).length;
+                      : ListView.builder(
+                          itemCount: filtersearch.length,
+                          itemBuilder: (context, index) {
+                            final product = filtersearch[index];
+                            final amount = instance.salla.where((item) {
+                              return item == product;
+                            }).length;
 
-                              return Sahredcard(
-                                width: width * 0.18888888,
+                            return Sahredcard(
+                              width: width * 0.18888888,
+                              product: product,
+                              fontsize: 11,
+                              minfontsize: 7,
+                              amount: amount,
+                              trallingwidget: Customcontainer(
                                 product: product,
-                                fontsize: 11,
-                                minfontsize: 7,
                                 amount: amount,
-                                trallingwidget: Customcontainer(
-                                  product: product,
-                                  amount: amount,
-                                ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          },
                         ),
                 ),
               ],

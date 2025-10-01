@@ -9,6 +9,7 @@ import 'package:market_salla/widgets/product.dart';
 import 'package:market_salla/widgets/salla/salla.dart';
 import 'package:provider/provider.dart';
 
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -30,72 +31,71 @@ class _HomeState extends State<Home> {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Image.asset('assets/img/icons/delivery.png'),
-            const SizedBox(width: 25),
-            const Text(
-              '61 Hopper street..',
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            ),
-            const Icon(Icons.keyboard_arrow_down_sharp),
-            const Spacer(),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Cart()),
-                );
-              },
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Image.asset(
-                    'assets/img/icons/basket.png',
-                    color: const Color.fromARGB(255, 26, 25, 25),
-
-                    width: 30,
-                  ),
-                  instance.salla.isNotEmpty
-                      ? Positioned(
-                          top: -7,
-                          right: -3,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color.fromARGB(255, 119, 224, 78),
-                            ),
-                            child: Text(
-                              '${instance.salla.length}',
-                              style: const TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0),
-                                fontSize: 12,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Image.asset('assets/img/icons/delivery.png'),
+              const SizedBox(width: 25),
+              const Text(
+                '61 Hopper street..',
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
+              const Icon(Icons.keyboard_arrow_down_sharp),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Cart()),
+                  );
+                },
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Image.asset(
+                      'assets/img/icons/basket.png',
+                      color: const Color.fromARGB(255, 26, 25, 25),
+                      width: 30,
+                    ),
+                    instance.salla.isNotEmpty
+                        ? Positioned(
+                            top: -7,
+                            right: -3,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromARGB(255, 119, 224, 78),
+                              ),
+                              child: Text(
+                                '${instance.salla.length}',
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
+                          )
+                        : const SizedBox.shrink(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              CarouselSlider.builder(
-                itemCount: banner.length,
-                itemBuilder:
-                    (BuildContext context, int index, int pageViewIndex) =>
-                        ClipRRect(
+        body: SingleChildScrollView(
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 10),
+                      CarouselSlider.builder(
+                        itemCount: banner.length,
+                        itemBuilder: (BuildContext context, int index,
+                                int pageViewIndex) =>
+                            ClipRRect(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10),
                           ),
@@ -105,81 +105,83 @@ class _HomeState extends State<Home> {
                             width: 1000.0,
                           ),
                         ),
-                options: CarouselOptions(
-                  height:  width * 0.5,
-                  autoPlay: true,
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  viewportFraction: 0.85,
-                  enableInfiniteScroll: true,
-                  autoPlayAnimationDuration: const Duration(milliseconds: 1000),
-                ),
-              ),
-              const SizedBox(height: 60),
-              Padding(
-                padding: const EdgeInsetsGeometry.symmetric(horizontal: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Customcategory(
-                        catchindex: (p) {
-                          setState(() {
-                            reseveindex = p;
-                          });
-                        },
+                        options: CarouselOptions(
+                          height: width * 0.5,
+                          autoPlay: true,
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          viewportFraction: 0.85,
+                          enableInfiniteScroll: true,
+                          autoPlayAnimationDuration:
+                              const Duration(milliseconds: 1000),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          itemslist[reseveindex].name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Color(0xff0A0B0A),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Seeall(reseveindex: reseveindex);
-                              },
-                            );
-                          },
-                          child: const Text(
-                            'see all',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff0CA201),
+                      const SizedBox(height: 60),
+                      Padding(
+                        padding:
+                            const EdgeInsetsGeometry.symmetric(horizontal: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Customcategory(
+                                catchindex: (p) {
+                                  setState(() {
+                                    reseveindex = p;
+                                  });
+                                },
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 40),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  itemslist[reseveindex].name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xff0A0B0A),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Seeall(reseveindex: reseveindex);
+                                      },
+                                    );
+                                  },
+                                  child: const Text(
+                                    'see all',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xff0CA201),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child:
+                                      Customproduct(selectedIndex: reseveindex),
+                                ),
+                                Salla(basket: instance.salla),
+                              ],
+                            ),
+                            const SizedBox(height: 40),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Customproduct(selectedIndex: reseveindex),
-                        ),
-                        Salla(basket: instance.salla),
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              ));
   }
 }
