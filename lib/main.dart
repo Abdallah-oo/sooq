@@ -1,36 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:market_salla/provider/googlelogin.dart';
-import 'package:market_salla/provider/sallastate.dart';
-import 'package:market_salla/screens/Registration/welcom.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
-import 'package:provider/provider.dart';
+import 'package:sooq/core/supabase/supabase_constants.dart';
+import 'package:sooq/core/utils/di/get_it.dart';
+import 'package:sooq/sooq_app.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
+  setUpGetIt();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
-}
+  await Supabase.initialize(
+    url: SupabaseConstants.url,
+    anonKey: SupabaseConstants.anonKey,
+  );
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => Sallastate()),
-        ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: const Welcom(),
-      ),
-    );
-  }
+  runApp(const SooqApp());
 }
