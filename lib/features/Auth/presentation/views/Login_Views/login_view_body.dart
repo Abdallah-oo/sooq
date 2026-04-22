@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sooq/core/routing/routes.dart';
 import 'package:sooq/core/utils/snack_bar.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Auth_Cubit/auth_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Auth_Cubit/auth_cubit.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/login_container.dart';
 
 class LoginViewBody extends StatelessWidget {

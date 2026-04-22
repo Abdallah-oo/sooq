@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_text.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
 
 class ImageSourceBottomSheet extends StatelessWidget {
   const ImageSourceBottomSheet({super.key, required this.cropForProfile});

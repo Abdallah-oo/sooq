@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sooq/core/utils/snack_bar.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Auth_Cubit/auth_cubit.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Auth_Cubit/auth_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/pick_image.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/signup_container.dart';
 

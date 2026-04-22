@@ -10,8 +10,8 @@ import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/snack_bar.dart';
 import 'package:sooq/core/utils/validators.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Auth_Cubit/auth_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Auth_Cubit/auth_cubit.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/custom_text_field.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/password_strength_indicator.dart';
 

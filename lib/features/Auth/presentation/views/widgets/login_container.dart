@@ -10,7 +10,7 @@ import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/validators.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Auth_Cubit/auth_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Auth_Cubit/auth_cubit.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/custom_text_field.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 

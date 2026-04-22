@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sooq/core/theme/app_colors.dart';
-import 'package:sooq/features/Auth/presentation/views/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
+import 'package:sooq/features/Auth/presentation/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
 import 'package:sooq/features/Auth/presentation/views/widgets/image_source_bottom_sheet.dart';
 
 const _kAvatarRadius = 45.0;
