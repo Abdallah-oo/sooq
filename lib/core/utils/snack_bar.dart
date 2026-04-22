@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:sooq/core/theme/app_colors.dart';
+import 'package:sooq/core/theme/app_text_styles.dart';
+import 'package:sooq/core/utils/custom_text.dart';
 
 class CustomSnackBar {
   static void _show(
@@ -11,24 +13,28 @@ class CustomSnackBar {
     required Color color,
     Duration duration = const Duration(seconds: 3),
   }) {
-    final overlay = Overlay.of(context);
+    final messenger = ScaffoldMessenger.of(context);
 
-    late OverlayEntry entry;
+    messenger.clearSnackBars();
 
-    entry = OverlayEntry(
-      builder: (context) => _ToastWidget(
-        message: message,
-        icon: icon,
-        color: color,
-        onDismiss: () => entry.remove(),
+    messenger.showSnackBar(
+      SnackBar(
+          margin: const EdgeInsets.only(bottom: 30), 
+        duration: duration,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+
+        content: _ToastWidget(
+          message: message,
+          icon: icon,
+          color: color,
+          onDismiss: () {
+            messenger.hideCurrentSnackBar();
+          },
+        ),
       ),
     );
-
-    overlay.insert(entry);
-
-    Future.delayed(duration, () {
-      if (entry.mounted) entry.remove();
-    });
   }
 
   static void success(BuildContext context, String message) {
@@ -44,7 +50,7 @@ class CustomSnackBar {
     _show(
       context,
       message: message,
-      icon: Icons.error_rounded,
+      icon: Icons.error,
       color: Colors.red,
     );
   }
@@ -62,7 +68,7 @@ class CustomSnackBar {
     _show(
       context,
       message: message,
-      icon: Icons.info_rounded,
+      icon: Icons.warning_rounded,
       color: AppColors.warning,
     );
   }
@@ -118,79 +124,67 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: SlideTransition(
-          position: slide,
-          child: FadeTransition(
-            opacity: fade,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.75),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withOpacity(0.3)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            color: widget.color.withOpacity(0.12),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            widget.icon,
-                            color: widget.color,
-                            size: 22,
-                          ),
-                        ),
+    return SlideTransition(
+      position: slide,
+      child: FadeTransition(
+        opacity: fade,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: widget.color.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(20),
 
-                        const Gap(12),
-
-                        // Text
-                        Expanded(
-                          child: Text(
-                            widget.message,
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-
-                        // Close Button
-                        GestureDetector(
-                          onTap: widget.onDismiss,
-                          child: const Icon(
-                            Icons.close,
-                            size: 18,
-                            color: Colors.black45,
-                          ),
-                        ),
-                      ],
+                  boxShadow: AppColors.shadowMd,
+                ),
+                child: Row(
+                  children: [
+                    // Icon
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        color: widget.color.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(widget.icon, color: widget.color, size: 22),
                     ),
-                  ),
+
+                    const Gap(12),
+
+                    // Text
+                    Expanded(
+                      child: CustomText(
+                        text: widget.message,
+                        style: AppTextStyles.titleSmall.copyWith(color: AppColors.grey100),
+                      ),
+                    ),
+
+                    // Close Button
+                    GestureDetector(
+                      onTap: widget.onDismiss,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 18,
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
