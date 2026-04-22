@@ -73,10 +73,10 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
             );
           },
         ),
-        SafeArea(child: Positioned(
+        Positioned(
             top: 10,
             right: 10,
-            child: GestureDetector(
+            child: SafeArea(child:GestureDetector(
               onTap: () {
                 context.pushReplacement(Routes.login);
               },
@@ -91,9 +91,8 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
                   style: AppTextStyles.button,
                 ),
               ),
-            ),
+            ),),
           ),
-        ),
    
      
       ],
