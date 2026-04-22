@@ -73,22 +73,28 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
             );
           },
         ),
-       Positioned(top: 10,right: 10,child: GestureDetector(
-         onTap: () {
-              context.pushReplacement(Routes.login);
-            },
-         child: Container(
-          padding: const EdgeInsets.all(7),
-          decoration: BoxDecoration(
-            color: AppColors.black.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15),
+        SafeArea(child: Positioned(
+            top: 10,
+            right: 10,
+            child: GestureDetector(
+              onTap: () {
+                context.pushReplacement(Routes.login);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: AppColors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const CustomText(
+                  text: 'Skip',
+                  style: AppTextStyles.button,
+                ),
+              ),
+            ),
           ),
-           child:  
-             const CustomText(text: 'Skip',style:AppTextStyles.button,)
-           
-         
-         ),
-       ))
+        ),
+   
      
       ],
     );
