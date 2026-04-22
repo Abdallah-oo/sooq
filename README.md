@@ -1,12 +1,14 @@
 <div align="center">
 
-# 🛍️ Sooq
+<img src="assets/img/logo/logo.png" alt="Sooq Logo" width="120"/>
 
-### A modern grocery shopping app built with Flutter & Supabase
+# Sooq
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart)](https://dart.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com)
+**A modern grocery shopping app built with Flutter & Supabase**
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 </div>
@@ -15,65 +17,93 @@
 
 ## 📸 Screenshots
 
-> Add your screenshots inside a `screenshots/` folder in the repo root.
+> Place your screenshots inside a `screenshots/` folder in the root of the repo.
 
-| | | |
+| Onboarding | Login | Sign Up |
 |:---:|:---:|:---:|
-| ![Login](screenshots/login.png) | ![Home](screenshots/home.png) | ![Search](screenshots/search.png) |
-| **Login** | **Home** | **Search** |
-| ![Cart](screenshots/cart.png) | ![Favorites](screenshots/favorites.png) | ![Signup](screenshots/signup.png) |
-| **Cart** | **Favorites** | **Sign Up** |
+| ![Onboarding](screenshots/onboarding.png) | ![Login](screenshots/login.png) | ![Signup](screenshots/signup.png) |
+
+| Home | Search | Favorites |
+|:---:|:---:|:---:|
+| ![Home](screenshots/home.png) | ![Search](screenshots/search.png) | ![Favorites](screenshots/favorites.png) |
+
+| Cart | Profile | |
+|:---:|:---:|:---:|
+| ![Cart](screenshots/cart.png) | ![Profile](screenshots/profile.png) | |
 
 ---
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| 🔐 **Authentication** | Email & password login, signup with profile image and password strength indicator |
-| 🏠 **Home** | Animated banner carousel, category filter, product grid, floating cart bar |
-| 🔍 **Search** | Debounced live search, filter by category/price/rating, sort options, query highlighting |
-| 🛒 **Cart** | Add/remove items, promo codes, delivery fee logic, swipe-to-delete, order placement |
-| ❤️ **Favorites** | Persistent wishlist with sort, staggered grid animation, synced across all screens |
+- 🚀 **Onboarding** — Smooth intro screens shown only on first launch
+- 🔐 **Authentication** — Login & signup with profile image, real-time password strength indicator
+- 🏠 **Home** — Auto-playing banner carousel, animated category filter, horizontal product grid, floating cart bar
+- 🔍 **Search** — Debounced live search, filter by category / price / rating, sort options, query highlighting in results
+- 🛒 **Cart** — Add/remove items, swipe-to-delete, promo codes, delivery fee logic, animated order summary
+- ❤️ **Favorites** — Persistent wishlist, animated heart button with haptic feedback, sort & swipe-to-remove
+- 👤 **Profile** — Account menu with orders, addresses, notifications, language, and logout
 
 ---
 
 ## 🏗️ Architecture
 
-The project follows **Clean Architecture** with strict layer separation across every feature.
+The project follows **Clean Architecture** with strict separation between layers across every feature.
 
 ```
 lib/
+├── main.dart
+├── sooq_app.dart
+├── root.dart                        # Bottom nav shell with IndexedStack
+│
 ├── core/
-│   ├── di/               # Dependency injection — get_it
-│   ├── routing/          # GoRouter — all named routes
-│   ├── supabase/         # Client, services, error mapping
-│   ├── theme/            # AppColors, AppTextStyles
-│   └── utils/            # Shared widgets, validators, snackbar
+│   ├── routing/
+│   │   ├── app_router.dart          # GoRouter — all routes with fade transitions
+│   │   └── routes.dart              # Route name constants
+│   ├── supabase/
+│   │   ├── supabase_auth_services.dart
+│   │   ├── supabase_client.dart
+│   │   ├── supabase_constants.dart
+│   │   └── supabase_error.dart
+│   ├── theme/
+│   │   ├── app_colors.dart
+│   │   └── app_text_styles.dart
+│   └── utils/
+│       ├── di/
+│       │   └── get_it.dart          # Dependency injection setup
+│       ├── ld/
+│       │   └── pref_helper.dart     # SharedPreferences unified wrapper
+│       ├── custom_button.dart
+│       ├── custom_text.dart
+│       ├── snack_bar.dart
+│       ├── validators.dart
+│       ├── responsive.dart
+│       └── iterable_extension.dart
 │
 └── features/
+    ├── On_Boarding/
     ├── Auth/
     ├── Home/
     ├── Search/
     ├── Cart/
-    └── Favorites/
+    ├── Favorite/
+    └── Profile/
 ```
 
-Every feature follows the same internal structure:
+Every feature follows the same internal pattern:
 
 ```
 feature/
 ├── data/
-│   ├── models/           # Typed data classes
+│   ├── models/
 │   └── repos/
-│       ├── repo.dart          # Abstract contract
-│       └── repo_impl.dart     # Supabase implementation
+│       ├── feature_repo.dart          # Abstract contract
+│       └── feature_repo_impl.dart     # Supabase implementation
 └── presentation/
-    ├── cubits/
-    │   ├── cubit.dart
-    │   └── state.dart
+    ├── cubit/
+    │   ├── feature_cubit.dart
+    │   └── feature_state.dart
     └── views/
-        ├── view.dart
+        ├── feature_view.dart
         └── widgets/
 ```
 
@@ -81,17 +111,32 @@ feature/
 
 ## 🧠 State Management
 
-State management is handled exclusively with **flutter_bloc (Cubit)** — no `setState` for business logic anywhere in the app.
+State is managed exclusively with **flutter_bloc (Cubit)** — no `setState` for business logic anywhere in the codebase.
 
-| Cubit | Scope | Why |
-|-------|-------|-----|
-| `AuthCubit` | View-scoped | Tied to auth screen lifecycle |
-| `CategoryCubit` | View-scoped | Tied to home screen lifecycle |
-| `SearchCubit` | View-scoped | Tied to search screen lifecycle |
-| `CartCubit` | **Singleton** | Shared across home, search, cart screens |
-| `FavoritesCubit` | **Singleton** | Shared across home, search, favorites screens |
+| Cubit | Scope | How it's provided |
+|-------|-------|-------------------|
+| `AuthCubit` | Screen-scoped | `BlocProvider` in router |
+| `PickImageCubit` | Screen-scoped | `BlocProvider` in router |
+| `CategoryCubit` | Root-scoped | `MultiBlocProvider` on Root route |
+| `CartCubit` | Root-scoped | `MultiBlocProvider` on Root route |
+| `FavoritesCubit` | Root-scoped | `MultiBlocProvider` on Root route |
+| `SearchCubit` | Screen-scoped | `BlocProvider` in `SearchView` |
 
-Singleton cubits are registered via `get_it` and initialized in `main()` — their state is live on every screen simultaneously with no synchronization needed.
+`CartCubit` and `FavoritesCubit` are provided at the `Root` route level — the favorites badge in the nav bar, the heart button on every product card, and the floating cart bar all share one live instance with zero synchronization needed.
+
+---
+
+## 🗺️ Navigation
+
+Navigation uses **GoRouter** with a custom `FadeTransition` on every route.
+
+| Route | Path | Description |
+|-------|------|-------------|
+| Onboarding | `/` | First launch intro |
+| Login | `/Login` | Auth entry point |
+| Signup | `/Signup` | Registration |
+| Root | `/Root` | Main shell — bottom nav with 4 tabs |
+| Cart | `/Cart` | Full cart screen |
 
 ---
 
@@ -105,10 +150,11 @@ Singleton cubits are registered via `get_it` and initialized in `main()` — the
 | State Management | flutter_bloc (Cubit) |
 | Dependency Injection | get_it |
 | Navigation | go_router |
-| Error Handling | dartz (`Either<Failure, Success>`) |
-| Local Persistence | shared_preferences |
-| Image Handling | image_picker + image_cropper |
+| Error Handling | dartz (`Either<SupabaseError, T>`) |
+| Local Persistence | shared_preferences (via `PrefHelper`) |
+| Image Picking & Cropping | image_picker + image_cropper |
 | Image Caching | cached_network_image |
+| Responsive Text | auto_size_text |
 
 ---
 
@@ -116,19 +162,20 @@ Singleton cubits are registered via `get_it` and initialized in `main()` — the
 
 ```yaml
 dependencies:
-  flutter_bloc: # Cubit state management
-  get_it:       # Service locator / DI
-  dartz:        # Functional Either type
-  go_router:    # Declarative navigation
-  supabase_flutter:      # Backend
-  shared_preferences:    # Local persistence
-  image_picker:          # Camera & gallery
-  image_cropper:         # Circle crop for avatars
-  cached_network_image:  # Network image caching
-  carousel_slider:       # Home banner
-  gap:                   # Clean spacing
-  flutter_svg:           # SVG icons
-  auto_size_text:        # Responsive text
+  flutter_bloc:
+  get_it:
+  dartz:
+  go_router:
+  supabase_flutter:
+  shared_preferences:
+  image_picker:
+  image_cropper:
+  cached_network_image:
+  carousel_slider:
+  gap:
+  flutter_svg:
+  auto_size_text:
+  loading_animation_widget:
 ```
 
 ---
@@ -156,7 +203,8 @@ flutter pub get
 
 **3. Configure Supabase**
 
-Create a file at `lib/core/supabase/supabase_constants.dart`:
+Open `lib/core/supabase/supabase_constants.dart` and replace the values:
+
 ```dart
 class SupabaseConstants {
   static const String url     = 'YOUR_SUPABASE_URL';
@@ -164,7 +212,7 @@ class SupabaseConstants {
 }
 ```
 
-> ⚠️ Never commit your real keys. Add `supabase_constants.dart` to `.gitignore`.
+> ⚠️ Add `supabase_constants.dart` to `.gitignore` before your first push to avoid exposing your credentials.
 
 **4. Run the app**
 ```bash
@@ -173,123 +221,56 @@ flutter run
 
 ---
 
-## 📁 Project Structure
-
-<details>
-<summary>Click to expand full structure</summary>
-
-```
-lib/
-├── core/
-│   ├── di/
-│   │   └── get_it.dart
-│   ├── routing/
-│   │   └── routes.dart
-│   ├── supabase/
-│   │   ├── supabase_client.dart
-│   │   ├── supabase_constants.dart
-│   │   ├── supabase_auth_services.dart
-│   │   └── supabase_error.dart
-│   ├── theme/
-│   │   ├── app_colors.dart
-│   │   └── app_text_styles.dart
-│   └── utils/
-│       ├── validators.dart
-│       ├── custom_button.dart
-│       ├── custom_text.dart
-│       ├── snack_bar.dart
-│       └── responsive.dart
-│
-└── features/
-    ├── Auth/
-    │   ├── data/
-    │   │   └── repos/
-    │   │       ├── auth_repo.dart
-    │   │       └── auth_repo_impl.dart
-    │   └── presentation/
-    │       ├── cubits/
-    │       │   ├── auth_cubit/
-    │       │   └── pick_image_cubit/
-    │       └── views/
-    │           ├── Login_Views/
-    │           ├── Signup_Views/
-    │           └── widgets/
-    │
-    ├── Home/
-    │   ├── data/
-    │   │   └── models/
-    │   │       ├── product_model.dart
-    │   │       ├── product_constants.dart
-    │   │       ├── category_model.dart
-    │   │       └── category_constants.dart
-    │   └── presentation/
-    │       ├── cubits/
-    │       │   ├── cart_cubit/
-    │       │   └── category_cubit/
-    │       └── views/
-    │           └── widgets/
-    │
-    ├── Search/
-    │   ├── data/
-    │   │   └── search_repository.dart
-    │   └── presentation/
-    │       ├── cubits/
-    │       │   └── search_cubit/
-    │       └── views/
-    │           └── widgets/
-    │
-    ├── Cart/
-    │   └── presentation/
-    │       └── views/
-    │           └── widgets/
-    │
-    └── Favorites/
-        ├── data/
-        │   └── favorites_repository.dart
-        └── presentation/
-            ├── cubits/
-            │   └── favorites_cubit/
-            └── views/
-                └── widgets/
-```
-
-</details>
-
----
-
 ## 🎨 Design System
 
-All colors and typography are centralized — no hardcoded values anywhere in the codebase.
+All colors and typography are centralized — no magic numbers or hardcoded values anywhere in the codebase.
 
-**Colors** — defined in `AppColors`:
-- `AppColors.primary` — brand green `#08650B`
-- `AppColors.surface` — light grey `#F7F7F7`
-- `AppColors.error` — red `#EF4444`
-- Shadow tokens: `shadowSm`, `shadowMd`, `shadowLg`, `shadowPrimary`
+**Typography** — `AppTextStyles` · Font: **Poppins**
 
-**Typography** — defined in `AppTextStyles` using **Poppins**:
-- `displaySmall`, `titleLarge`, `titleMedium`, `titleSmall`
-- `bodyLarge`, `bodyMedium`, `bodySmall`
-- `labelLarge`, `labelMedium`, `button`, `caption`
+| Token | Size | Weight | Use |
+|-------|------|--------|-----|
+| `displaySmall` | 22 | 700 | Hero headings |
+| `titleLarge` | 18 | 700 | Screen titles |
+| `titleMedium` | 16 | 600 | Section headers |
+| `titleSmall` | 14 | 600 | Card titles |
+| `bodyLarge` | 14 | 500 | Primary body text |
+| `bodyMedium` | 13 | 400 | Secondary body text |
+| `labelLarge` | 13 | 600 | Buttons, labels |
+| `caption` | 11 | 400 | Metadata, hints |
+
+**Colors** — `AppColors`
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| `primary` | `#08650B` | Brand green |
+| `primaryLight` | `#B4F3B6` | Tinted surfaces |
+| `surface` | `#F7F7F7` | Card backgrounds |
+| `error` | `#EF4444` | Errors, destructive actions |
+| `warning` | `#F9A825` | Warnings |
+
+**Shadow tokens:** `shadowSm` · `shadowMd` · `shadowLg` · `shadowPrimary`
 
 ---
 
 ## 🔑 Key Design Decisions
 
-**1. Either-based error handling**
-All repository methods return `Either<SupabaseError, T>`. The UI never catches raw exceptions — errors are always typed and user-readable before they reach the cubit.
+**1. `PrefHelper` as a unified persistence layer**
+All `SharedPreferences` access goes through a single static `PrefHelper` — recent searches and favorites both use it, with a lazy singleton pattern to avoid repeated `getInstance()` calls across the app.
 
-**2. Singleton cubits via get_it**
-`CartCubit` and `FavoritesCubit` are registered as singletons so the cart badge, the cart screen, and every product card all share one source of truth — zero sync issues.
+**2. Either-based error handling**
+All repository methods return `Either<SupabaseError, T>`. Supabase exceptions are caught and mapped to user-readable messages inside `AuthService` before they ever reach a cubit — the UI always receives a clean, typed result.
 
-**3. Debounced search**
-`SearchCubit` cancels and restarts a 350ms `Timer` on every keystroke. Zero wasted network calls while the user is typing.
+**3. Root-level cubit provision**
+`CartCubit` and `FavoritesCubit` are provided at the `Root` route via `MultiBlocProvider`. Any screen rendered inside the bottom nav shell can access them without re-creation or prop-drilling.
 
-**4. ValueNotifier for local UI state**
-Password visibility toggles, promo code status, and loading indicators inside sheets use `ValueNotifier` — the parent widget never rebuilds for purely local state changes.
+**4. Fade transitions on all routes**
+Every GoRouter `pageBuilder` uses `CustomTransitionPage` with a `FadeTransition` at 400ms — a consistent, polished feel across the entire navigation flow.
 
-**5. Reusable `FavoriteButton`**
-Drop `FavoriteButton(product: product)` anywhere in the app. It reads from and writes to `FavoritesCubit` via `get_it` internally. Zero wiring required from the caller.
+**5. Glassmorphic bottom navigation bar**
+The nav bar in `root.dart` uses `BackdropFilter` with `ImageFilter.blur(sigmaX: 12, sigmaY: 12)` and a semi-transparent overlay to achieve a frosted glass effect that floats over the page content.
+
+**6. Debounced search**
+`SearchCubit` cancels and restarts a `Timer` on every keystroke with a 350ms delay — zero wasted computation while the user is typing, and instant results when they pause.
 
 ---
 
@@ -300,14 +281,12 @@ Drop `FavoriteButton(product: product)` anywhere in the app. It reads from and w
 - [ ] Push notifications
 - [ ] Address management
 - [ ] Payment integration
-- [ ] Dark mode support
-- [ ] Localization (Arabic / English)
+- [ ] Dark mode
+- [ ] Arabic / English localization
 
 ---
 
 ## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome.
 
 1. Fork the project
 2. Create your branch: `git checkout -b feature/your-feature`
