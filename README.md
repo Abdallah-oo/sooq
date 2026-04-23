@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="screenshots/splash.jpg" alt="Sooq" width="100" style="border-radius:20px"/>
+<img src="screenshots/splash.jpg" alt="Sooq" width="200" style="border-radius:30px"/>
 
 # Sooq
 
@@ -9,7 +9,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?logo=dart&logoColor=white)](https://dart.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 
 </div>
 
@@ -297,18 +297,6 @@ The nav bar in `root.dart` uses `BackdropFilter` with `ImageFilter.blur(sigmaX: 
 
 **6. Debounced search**
 `SearchCubit` cancels and restarts a `Timer` on every keystroke with a 350ms delay — zero wasted computation while the user is typing, and instant results when they pause.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Orders history screen
-- [ ] Product detail page with Hero transition
-- [ ] Push notifications
-- [ ] Address management
-- [ ] Payment integration
-- [ ] Dark mode
-- [ ] Arabic / English localization
 
 ---
 
