@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/img/logo/logo.png" alt="Sooq Logo" width="120"/>
+<img src="screenshots/splash.jpg" alt="Sooq" width="100" style="border-radius:20px"/>
 
 # Sooq
 
@@ -17,19 +17,45 @@
 
 ## 📸 Screenshots
 
-> Place your screenshots inside a `screenshots/` folder in the root of the repo.
+**Onboarding & Auth**
 
-| Onboarding | Login | Sign Up |
+| Splash | Onboarding | Login |
 |:---:|:---:|:---:|
-| ![Onboarding](screenshots/onboarding.png) | ![Login](screenshots/login.png) | ![Signup](screenshots/signup.png) |
+| ![Splash](screenshots/splash.jpg) | ![Onboarding](screenshots/onboarding.jpg) | ![Login](screenshots/login.jpg) |
 
-| Home | Search | Favorites |
+| Sign Up | Profile Image | Validation |
 |:---:|:---:|:---:|
-| ![Home](screenshots/home.png) | ![Search](screenshots/search.png) | ![Favorites](screenshots/favorites.png) |
+| ![Signup](screenshots/signup.jpg) | ![Signup Crop](screenshots/signup_crop_profile_image.jpg) | ![Signup Validation](screenshots/signup_validation.jpg) |
 
-| Cart | Profile | |
+**Home & Search**
+
+| Home | Search | Search Filter |
 |:---:|:---:|:---:|
-| ![Cart](screenshots/cart.png) | ![Profile](screenshots/profile.png) | |
+| ![Home](screenshots/home.jpg) | ![Search](screenshots/search.jpg) | ![Search Filter](screenshots/search_filter.jpg) |
+
+| Search Result | | |
+|:---:|:---:|:---:|
+| ![Search Result](screenshots/search_result.jpg) | | |
+
+**Cart**
+
+| Cart | Empty State | Delete Item |
+|:---:|:---:|:---:|
+| ![Cart](screenshots/cart.jpg) | ![Cart Empty](screenshots/cart_empty_state.jpg) | ![Cart Delete](screenshots/cart_delete_item.jpg) |
+
+| Checkout | | |
+|:---:|:---:|:---:|
+| ![Checkout](screenshots/cart_successful_checkout.jpg) | | |
+
+**Favorites & Profile**
+
+| Favorites | Filter | Delete Item |
+|:---:|:---:|:---:|
+| ![Favorites](screenshots/favorite.jpg) | ![Favorites Filter](screenshots/favorite_filter.jpg) | ![Favorites Delete](screenshots/favorite_delete_item.jpg) |
+
+| Profile | | |
+|:---:|:---:|:---:|
+| ![Profile](screenshots/profile.jpg) | | |
 
 ---
 
