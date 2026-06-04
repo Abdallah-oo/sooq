@@ -14,7 +14,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
     <application
-        android:label="Sooq"
+        android:label="sooq"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <!-- ✅ مهم: Crop Activity -->
