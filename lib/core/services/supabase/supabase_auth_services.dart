@@ -1,7 +1,8 @@
+
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sooq/core/supabase/supabase_error.dart';
+import 'package:sooq/core/services/supabase/errors/supabase_error.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
@@ -11,10 +12,7 @@ class AuthService {
 
   Future<User> logIn(String email, String password) async {
     try {
-      final res = await client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      final res = await client.auth.signInWithPassword(email: email, password: password);
       return res.user!;
     } catch (e) {
       throw _handleError(e);
@@ -47,7 +45,7 @@ class AuthService {
   }
 
   User? get currentUser => client.auth.currentUser;
-SupabaseError _handleError(Object e) {
+  SupabaseError _handleError(Object e) {
     if (e is AuthException) {
       final msg = e.message.toLowerCase();
 

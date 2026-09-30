@@ -1,17 +1,22 @@
-class Category {
-  final String image;
+class CategoryModel {
+  final String id;
   final String name;
-  const Category({required this.image, required this.name});
+  final String slug;
+  final String imageUrl;
 
-  static const List<Category> itemslist = [
-    Category(image: 'assets/img/category/vegetable.png', name: 'vegetable'),
+  const CategoryModel({
+    required this.id,
+    required this.name,
+    required this.slug,
+    required this.imageUrl,
+  });
 
-    Category(image: 'assets/img/category/fruits.png', name: 'fruits'),
-
-    Category(image: 'assets/img/category/dairy.png', name: 'dairy'),
-
-    Category(image: 'assets/img/category/protiens.png', name: 'protiens'),
-
-    Category(image: 'assets/img/category/laundry.png', name: 'laundry'),
-  ];
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      slug: json['slug'] as String,
+      imageUrl: json['image_url'] as String? ?? '',
+    );
+  }
 }
