@@ -4,10 +4,10 @@ part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(const CartState());
-  //add item
+
   void addItem(ProductModel product) {
     final items = List<CartItem>.from(state.items);
-    final index = items.indexWhere((e) => e.product.id == e.product.id);
+    final index = items.indexWhere((e) => e.product.id == product.id);
 
     if (index >= 0) {
       items[index] = items[index].copyWith(quantity: items[index].quantity + 1);
@@ -18,13 +18,13 @@ class CartCubit extends Cubit<CartState> {
   }
 
   int quantityOf(ProductModel product) {
-    final index = state.items.indexWhere((e) => e.product.id == e.product.id);
+    final index = state.items.indexWhere((e) => e.product.id == product.id);
     return index >= 0 ? state.items[index].quantity : 0;
   }
 
   void removeItem(ProductModel product) {
     final items = List<CartItem>.from(state.items);
-    final index = items.indexWhere((e) => e.product.id == e.product.id);
+    final index = items.indexWhere((e) => e.product.id == product.id);
     if (index < 0) return;
 
     if (items[index].quantity > 1) {
@@ -36,8 +36,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   void removeAllOf(ProductModel product) {
-    final items = List<CartItem>.from(state.items)
-      ..removeWhere((e) => e.product.id == e.product.id);
+    final items = List<CartItem>.from(state.items)..removeWhere((e) => e.product.id == product.id);
     emit(state.copyWith(items: items));
   }
 
