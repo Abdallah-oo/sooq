@@ -1,6 +1,6 @@
 part of 'cart_cubit.dart';
 class CartItem {
-  final Product product;
+  final ProductModel product;
   final int quantity;
 
   const CartItem({required this.product, required this.quantity});

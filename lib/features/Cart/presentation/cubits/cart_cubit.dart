@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sooq/features/Home/data/models/products_model.dart';
-part   'cart_state.dart';
+import 'package:sooq/features/Home/data/models/product_model.dart';
+part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(const CartState());
-//add item
-  void addItem(Product product) {
+  //add item
+  void addItem(ProductModel product) {
     final items = List<CartItem>.from(state.items);
-    final index = items.indexWhere((e) => e.product.name == product.name);
+    final index = items.indexWhere((e) => e.product.id == e.product.id);
 
     if (index >= 0) {
       items[index] = items[index].copyWith(quantity: items[index].quantity + 1);
@@ -17,11 +17,14 @@ class CartCubit extends Cubit<CartState> {
     emit(state.copyWith(items: items));
   }
 
+  int quantityOf(ProductModel product) {
+    final index = state.items.indexWhere((e) => e.product.id == e.product.id);
+    return index >= 0 ? state.items[index].quantity : 0;
+  }
 
-//remove item
-  void removeItem(Product product) {
+  void removeItem(ProductModel product) {
     final items = List<CartItem>.from(state.items);
-    final index = items.indexWhere((e) => e.product.name == product.name);
+    final index = items.indexWhere((e) => e.product.id == e.product.id);
     if (index < 0) return;
 
     if (items[index].quantity > 1) {
@@ -31,18 +34,12 @@ class CartCubit extends Cubit<CartState> {
     }
     emit(state.copyWith(items: items));
   }
-  //remove all items
 
-  void removeAllOf(Product product) {
+  void removeAllOf(ProductModel product) {
     final items = List<CartItem>.from(state.items)
-      ..removeWhere((e) => e.product.name == product.name);
+      ..removeWhere((e) => e.product.id == e.product.id);
     emit(state.copyWith(items: items));
   }
 
   void clearCart() => emit(const CartState());
-
-  int quantityOf(Product product) {
-    final index = state.items.indexWhere((e) => e.product.name == product.name);
-    return index >= 0 ? state.items[index].quantity : 0;
-  }
 }

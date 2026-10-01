@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_text.dart';
+import 'package:sooq/core/widgets/app_network_image.dart';
 import 'package:sooq/features/Cart/presentation/cubits/cart_cubit.dart';
 import 'package:sooq/features/Favorite/presentation/cubit/favorites_cubit.dart';
 import 'package:sooq/features/Favorite/presentation/views/widgets/favorite_btn.dart';
@@ -41,7 +42,7 @@ class CartItemCard extends StatelessWidget {
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Image.asset(item.product.image, fit: BoxFit.contain),
+                child: AppNetworkImage(item.product.imageUrl, cacheWidth: 300),
               ),
               const Gap(14),
 
@@ -50,10 +51,7 @@ class CartItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomText(
-                      text: item.product.name,
-                      style: AppTextStyles.labelLarge,
-                    ),
+                    CustomText(text: item.product.name, style: AppTextStyles.labelLarge),
                     const Gap(4),
                     CustomText(
                       text: '\$${item.product.price.toStringAsFixed(2)} each',
@@ -68,9 +66,7 @@ class CartItemCard extends StatelessWidget {
                         const Spacer(),
                         CustomText(
                           text: '\$${subtotal.toStringAsFixed(2)}',
-                          style: AppTextStyles.titleSmall.copyWith(
-                            color: AppColors.primary,
-                          ),
+                          style: AppTextStyles.titleSmall.copyWith(color: AppColors.primary),
                         ),
                       ],
                     ),
@@ -108,11 +104,7 @@ class _DismissBackground extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.delete_outline_rounded,
-            color: AppColors.error,
-            size: 26,
-          ),
+          const Icon(Icons.delete_outline_rounded, color: AppColors.error, size: 26),
           const Gap(4),
           CustomText(
             text: 'Remove',
@@ -143,12 +135,8 @@ class _QuantityControl extends StatelessWidget {
         children: [
           // Minus / delete
           _StepButton(
-            icon: item.quantity > 1
-                ? Icons.remove_rounded
-                : Icons.delete_outline_rounded,
-            iconColor: item.quantity > 1
-                ? AppColors.primaryText
-                : AppColors.error,
+            icon: item.quantity > 1 ? Icons.remove_rounded : Icons.delete_outline_rounded,
+            iconColor: item.quantity > 1 ? AppColors.primaryText : AppColors.error,
             onTap: () => context.read<CartCubit>().removeItem(item.product),
           ),
 
@@ -181,11 +169,7 @@ class _QuantityControl extends StatelessWidget {
 }
 
 class _StepButton extends StatelessWidget {
-  const _StepButton({
-    required this.icon,
-    required this.iconColor,
-    required this.onTap,
-  });
+  const _StepButton({required this.icon, required this.iconColor, required this.onTap});
 
   final IconData icon;
   final Color iconColor;
