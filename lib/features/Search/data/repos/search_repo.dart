@@ -1,94 +1,91 @@
-import 'package:sooq/core/constances/product_constants.dart';
+
+import 'package:dartz/dartz.dart';
+import 'package:sooq/core/services/supabase/errors/supabase_error.dart';
+import 'package:sooq/core/services/supabase/errors/supabase_error_handler.dart';
 import 'package:sooq/core/utils/ld/pref_helper.dart';
-import 'package:sooq/features/Home/data/models/products_model.dart';
+import 'package:sooq/features/Home/data/models/product_model.dart';
 import 'package:sooq/features/Search/presentation/cubit/search_cubit.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchRepository {
-
-  SearchRepository() {
-    // Merge all product lists once at construction
-    _allProducts = [
-      ...ProductConstants.vegetables,
-      ...ProductConstants.fruits,
-      ...ProductConstants.dairy,
-      ...ProductConstants.proteins,
-      ...ProductConstants.laundry,
-    ];
-  }
-
-  late final List<Product> _allProducts;
-
+  final SupabaseClient _client;
+  static const int pageSize = 20;
   static const int _maxRecent = 8;
+  const SearchRepository(this._client);
 
-  // ── Search + Filter + Sort ──
-  List<Product> search({required String query, required SearchFilter filter}) {
-    final trimmed = query.trim().toLowerCase();
+  // ── Search + Filter + Sort (كله على السيرفر) ──
+  Future<Either<SupabaseError, List<ProductModel>>> search({
+    required String query,
+    required SearchFilter filter,
+    int page = 0,
+  }) async {
+    try {
+      final term = _escapeLike(query.trim());
 
-    // Start with full catalogue or pre-filtered by category
-    Iterable<Product> results = filter.category != null
-        ? _allProducts.where(
-            (p) => p.category.toLowerCase() == filter.category!.toLowerCase(),
-          )
-        : _allProducts;
+      // inner join لما نفلتر بالكاتيجوري عشان نستبعد المنتجات التانية
+      final join = filter.category != null ? 'categories!inner(name)' : 'categories(name)';
 
-    // Query match — name contains query
-    if (trimmed.isNotEmpty) {
-      results = results.where((p) => p.name.toLowerCase().contains(trimmed));
+      var builder = _client.from('products').select('*, $join');
+
+      if (term.isNotEmpty) builder = builder.ilike('name', '%$term%');
+      if (filter.category != null) {
+        builder = builder.ilike('categories.name', filter.category!);
+      }
+      if (filter.minPrice != null) builder = builder.gte('price', filter.minPrice!);
+      if (filter.maxPrice != null) builder = builder.lte('price', filter.maxPrice!);
+      if (filter.minRating != null) builder = builder.gte('rating', filter.minRating!);
+
+      final (column, ascending) = switch (filter.sortBy) {
+     SearchSortBy.priceLow => ('price', true),
+        SearchSortBy.priceHigh => ('price', false),
+        SearchSortBy.rating => ('rating', false),
+        SearchSortBy.popularity => ('votes', false),
+        SearchSortBy.relevance => ('name', true),
+      };
+
+      final from = page * pageSize;
+      final response = await builder
+          .order(column, ascending: ascending)
+          .order('id') // tie-breaker: من غيره الصفحات ممكن تكرر أو تفوّت منتجات
+          .range(from, from + pageSize - 1);
+
+      var products = (response as List).map((row) => ProductModel.fromJson(row)).toList();
+
+      // Relevance: اللي بيبدأ بالكلمة يطلع الأول (داخل الصفحة الحالية)
+      if (filter.sortBy == SearchSortBy.relevance && term.isNotEmpty) {
+        final q = query.trim().toLowerCase();
+        products = [
+          ...products.where((p) => p.name.toLowerCase().startsWith(q)),
+          ...products.where((p) => !p.name.toLowerCase().startsWith(q)),
+        ];
+      }
+
+      return Right(products);
+    } catch (e) {
+      return Left(SupabaseErrorHandler.handleSupabaseError(e));
     }
-
-    // Price range
-    if (filter.minPrice != null) {
-      results = results.where((p) => p.price >= filter.minPrice!);
-    }
-    if (filter.maxPrice != null) {
-      results = results.where((p) => p.price <= filter.maxPrice!);
-    }
-
-    // Minimum rating
-    if (filter.minRating != null) {
-      results = results.where((p) => p.rate >= filter.minRating!);
-    }
-
-    // Sort
-    final list = results.toList();
-    switch (filter.sortBy) {
-      case SortBy.priceLow:
-        list.sort((a, b) => a.price.compareTo(b.price));
-        break;
-      case SortBy.priceHigh:
-        list.sort((a, b) => b.price.compareTo(a.price));
-        break;
-      case SortBy.rating:
-        list.sort((a, b) => b.rate.compareTo(a.rate));
-        break;
-      case SortBy.popularity:
-        list.sort((a, b) => b.votes.compareTo(a.votes));
-        break;
-      case SortBy.relevance:
-        // Boost exact name starts-with matches to the top
-        list.sort((a, b) {
-          final aStarts = a.name.toLowerCase().startsWith(trimmed) ? 0 : 1;
-          final bStarts = b.name.toLowerCase().startsWith(trimmed) ? 0 : 1;
-          return aStarts.compareTo(bStarts);
-        });
-        break;
-    }
-
-    return list;
   }
 
-  // ── Trending (top-voted across all categories) ──
-  List<Product> getTrending({int limit = 8}) {
-    final sorted = List<Product>.from(_allProducts)
-      ..sort((a, b) => b.votes.compareTo(a.votes));
-    return sorted.take(limit).toList();
+  // ── Trending: أسماء بس (خفيف) ──
+  Future<Either<SupabaseError, List<String>>> getTrending({int limit = 8}) async {
+    try {
+      final response = await _client
+          .from('products')
+          .select('name')
+          .order('votes', ascending: false)
+          .order('id')
+          .limit(limit);
+
+      return Right((response as List).map((r) => r['name'] as String).toList());
+    } catch (e) {
+      return Left(SupabaseErrorHandler.handleSupabaseError(e));
+    }
   }
 
-
+  // ── Recent searches (زي ما هي) ──
   Future<void> saveSearch(String query) async {
     if (query.trim().isEmpty) return;
     final current = await PrefHelper.loadRecentSearches() ?? [];
-
     final updated = [
       query.trim(),
       ...current.where((q) => q != query.trim()),
@@ -101,4 +98,8 @@ class SearchRepository {
     current.remove(query);
     await PrefHelper.saveRecentSearches(current);
   }
+
+  // لو اليوزر كتب % أو _ متتعاملش كـ wildcard
+  String _escapeLike(String s) =>
+      s.replaceAll(r'\', r'\\').replaceAll('%', r'\%').replaceAll('_', r'\_');
 }

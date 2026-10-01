@@ -19,7 +19,7 @@ class CustomSnackBar {
 
     messenger.showSnackBar(
       SnackBar(
-          margin: const EdgeInsets.only(bottom: 30), 
+          margin: const EdgeInsets.only(bottom: 30),
         duration: duration,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -42,7 +42,7 @@ class CustomSnackBar {
       context,
       message: message,
       icon: Icons.check_circle_rounded,
-      color: Colors.green,
+      color: const Color.fromARGB(255, 13, 87, 15),
     );
   }
 

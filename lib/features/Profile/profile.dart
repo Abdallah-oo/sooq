@@ -90,7 +90,7 @@ class ProfileView extends StatelessWidget {
                 iconColor: AppColors.error,
                 title: 'Logout',
                 isLogout: true,
-                onTap: () =>context.pushReplacement(Routes.login),
+                onTap: () => context.pushReplacement(Routes.login),
               ),
               const Gap(100),
             ],
@@ -108,11 +108,10 @@ class ProfileView extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
           child: CustomText(text: title, style: AppTextStyles.titleMedium),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
+        Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          clipBehavior: Clip.antiAlias, // يقص الـ ripple عند الحواف المدورة
           child: Column(children: items),
         ),
       ],
@@ -144,11 +143,7 @@ class ProfileView extends StatelessWidget {
 
       trailing: isLogout
           ? null
-          : const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: AppColors.grey500,
-            ),
+          : const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.grey500),
       onTap: onTap,
     );
   }

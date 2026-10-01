@@ -23,8 +23,7 @@ class PrefHelper {
     await _remove(_recentKey);
   }
 
-
-//* favorites Management
+  //* favorites Management
   static Future<void> saveFavorites(List<String> updated) async {
     await _setStringList(_favoriteKey, updated);
   }
@@ -36,7 +35,6 @@ class PrefHelper {
   static Future<void> clearFavorites() async {
     await _remove(_favoriteKey);
   }
-
 
   // Private helpers — add all future keys through these
   static Future<void> _setStringList(String key, List<String> value) async {

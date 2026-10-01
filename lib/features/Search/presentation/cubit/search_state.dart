@@ -1,7 +1,7 @@
 part of 'search_cubit.dart';
 
 //sort by state enum
-enum SortBy { relevance, priceLow, priceHigh, rating, popularity }
+enum SearchSortBy  { relevance, priceLow, priceHigh, rating, popularity }
 
 //search filters
 class SearchFilter {
@@ -9,14 +9,14 @@ class SearchFilter {
   final double? maxPrice;
   final double? minRating;
   final String? category;
-  final SortBy sortBy;
+  final SearchSortBy  sortBy;
 
   const SearchFilter({
     this.minPrice,
     this.maxPrice,
     this.minRating,
     this.category,
-    this.sortBy = SortBy.relevance,
+    this.sortBy = SearchSortBy.relevance,
   });
 
   SearchFilter copyWith({
@@ -24,7 +24,7 @@ class SearchFilter {
     double? maxPrice,
     double? minRating,
     String? category,
-    SortBy? sortBy,
+    SearchSortBy? sortBy,
     bool clearMinPrice = false,
     bool clearMaxPrice = false,
     bool clearMinRating = false,
@@ -44,14 +44,14 @@ class SearchFilter {
       maxPrice != null ||
       minRating != null ||
       category != null ||
-      sortBy != SortBy.relevance;
+      sortBy != SearchSortBy.relevance;
 
   int get activeFilterCount {
     int count = 0;
     if (minPrice != null || maxPrice != null) count++;
     if (minRating != null) count++;
     if (category != null) count++;
-    if (sortBy != SortBy.relevance) count++;
+    if (sortBy != SearchSortBy.relevance) count++;
     return count;
   }
 }
@@ -63,9 +63,12 @@ enum SearchStatus { idle, loading, results, empty, error }
 class SearchState {
   final SearchStatus status;
   final String query;
-  final List<Product> results;
+  final List<ProductModel> results;
   final List<String> recentSearches;
+  final List<String> trending;
   final SearchFilter filter;
+  final bool isLoadingMore;
+  final bool hasMore;
   final String? errorMessage;
 
   const SearchState({
@@ -73,16 +76,22 @@ class SearchState {
     this.query = '',
     this.results = const [],
     this.recentSearches = const [],
+    this.trending = const [],
     this.filter = const SearchFilter(),
+    this.isLoadingMore = false,
+    this.hasMore = false,
     this.errorMessage,
   });
 
   SearchState copyWith({
     SearchStatus? status,
     String? query,
-    List<Product>? results,
+    List<ProductModel>? results,
     List<String>? recentSearches,
+    List<String>? trending,
     SearchFilter? filter,
+    bool? isLoadingMore,
+    bool? hasMore,
     String? errorMessage,
   }) {
     return SearchState(
@@ -90,7 +99,10 @@ class SearchState {
       query: query ?? this.query,
       results: results ?? this.results,
       recentSearches: recentSearches ?? this.recentSearches,
+      trending: trending ?? this.trending,
       filter: filter ?? this.filter,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      hasMore: hasMore ?? this.hasMore,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

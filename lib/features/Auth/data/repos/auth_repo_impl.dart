@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:sooq/core/supabase/supabase_auth_services.dart';
-import 'package:sooq/core/supabase/supabase_error.dart';
+import 'package:sooq/core/services/supabase/supabase_auth_services.dart';
+import 'package:sooq/core/services/supabase/errors/supabase_error.dart';
 import 'package:sooq/features/Auth/data/repos/auth_repo.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
