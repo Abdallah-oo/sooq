@@ -3,5 +3,6 @@ class Routes {
   static const String login = '/Login';
   static const String signup = '/Signup';
   static const String cart = '/Cart';
+  static const String categoryProducts = '/CategoryProducts';
 
 }

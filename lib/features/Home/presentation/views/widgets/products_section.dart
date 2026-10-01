@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:sooq/core/extensions/responsive.dart';
+import 'package:sooq/core/routing/app_router.dart';
+import 'package:sooq/core/routing/routes.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/di/get_it.dart';
+import 'package:sooq/features/Cart/presentation/cubits/cart_cubit.dart';
+import 'package:sooq/features/Favorite/presentation/cubit/favorites_cubit.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
 import 'package:sooq/features/Home/data/repos/category_product_repo/category_product_repo.dart';
 import 'package:sooq/features/Home/presentation/cubits/category_cubit/category_cubit.dart';
@@ -40,7 +45,14 @@ class ProductsSection extends StatelessWidget {
                 CustomText(text: category.name, style: AppTextStyles.titleMedium),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {}, // هنوصلها بشاشة See All بعدين
+                  onPressed: () {
+                    final params = CategoryProductsViewParameters(
+                      category: category,
+                      favoritesCubit: context.read<FavoritesCubit>(),
+                      cartCubit: context.read<CartCubit>(),
+                    );
+                    context.push(Routes.categoryProducts, extra: params);
+                  },
                   child: CustomText(
                     text: 'See all',
                     style: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
