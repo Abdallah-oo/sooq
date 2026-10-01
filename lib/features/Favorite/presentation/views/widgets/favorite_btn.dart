@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/features/Favorite/presentation/cubit/favorites_cubit.dart';
-import 'package:sooq/features/Home/data/models/products_model.dart';
+import 'package:sooq/features/Home/data/models/product_model.dart';
 
 class FavoriteButton extends StatefulWidget {
   const FavoriteButton({
@@ -14,7 +14,7 @@ class FavoriteButton extends StatefulWidget {
     this.iconSize, required this.cubit,
   });
   final FavoritesCubit cubit;
-  final Product product;
+  final ProductModel product;
   final double size;
   final Color? backgroundColor;
   final double? iconSize;

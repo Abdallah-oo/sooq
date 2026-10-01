@@ -4,10 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_text.dart';
+import 'package:sooq/core/widgets/app_network_image.dart';
 import 'package:sooq/features/Cart/presentation/cubits/cart_cubit.dart';
 import 'package:sooq/features/Favorite/presentation/cubit/favorites_cubit.dart';
 import 'package:sooq/features/Favorite/presentation/views/widgets/favorite_btn.dart';
-import 'package:sooq/features/Home/data/models/products_model.dart';
+import 'package:sooq/features/Home/data/models/product_model.dart';
 
 class FavoritesGrid extends StatelessWidget {
   const FavoritesGrid({super.key});
@@ -38,7 +39,7 @@ class FavoritesGrid extends StatelessWidget {
                 ),
               ),
             ),
-        
+
           ],
         );
       },
@@ -104,12 +105,12 @@ class _StaggeredEntranceState extends State<_StaggeredEntrance>
 class _FavoritesCard extends StatelessWidget {
   const _FavoritesCard({required this.product});
 
-  final Product product;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey('fav-${product.name}'),
+      key: ValueKey('fav-${product.id}'),
       direction: DismissDirection.up,
       onDismissed: (_) => context.read<FavoritesCubit>().remove(product),
       background: _DismissUpBackground(),
@@ -136,7 +137,7 @@ class _FavoritesCard extends StatelessWidget {
                       width: double.infinity,
                       color: AppColors.surface,
                       padding: const EdgeInsets.all(16),
-                      child: Image.asset(product.image, fit: BoxFit.contain),
+                      child: AppNetworkImage(product.imageUrl, cacheWidth: 300),
                     ),
                   ),
 
@@ -166,7 +167,7 @@ class _FavoritesCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: CustomText(
-                        text: product.category,
+                        text: product.categoryName,
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.primary,
                         ),
@@ -203,7 +204,7 @@ class _FavoritesCard extends StatelessWidget {
                         ),
                         const Gap(4),
                         CustomText(
-                          text: product.rate.toStringAsFixed(1),
+                          text: product.rating.toStringAsFixed(1),
                           style: AppTextStyles.bodySmall,
                         ),
                         const Gap(4),
@@ -272,7 +273,7 @@ class _DismissUpBackground extends StatelessWidget {
 // ── Add to cart button on the card ──
 class _CartButton extends StatelessWidget {
   const _CartButton({required this.product});
-  final Product product;
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
