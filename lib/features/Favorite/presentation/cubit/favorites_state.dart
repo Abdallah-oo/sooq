@@ -6,7 +6,7 @@ enum FavoritesSort { dateAdded, nameAZ, nameZA, priceLow, priceHigh, rating }
 
 class FavoritesState {
   final FavoritesStatus status;
-  final List<Product> favorites;
+  final List<ProductModel> favorites;
   final FavoritesSort sort;
 
   const FavoritesState({
@@ -15,14 +15,14 @@ class FavoritesState {
     this.sort = FavoritesSort.dateAdded,
   });
 
-  bool isFavorite(Product product) =>
-      favorites.any((p) => p.name == product.name);
+
+  bool isFavorite(ProductModel product) => favorites.any((p) => p.id == product.id);
 
   int get count => favorites.length;
 
   FavoritesState copyWith({
     FavoritesStatus? status,
-    List<Product>? favorites,
+    List<ProductModel>? favorites,
     FavoritesSort? sort,
   }) {
     return FavoritesState(
