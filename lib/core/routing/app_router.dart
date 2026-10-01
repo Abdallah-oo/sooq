@@ -12,10 +12,13 @@ import 'package:sooq/features/Cart/presentation/cubits/cart_cubit.dart';
 import 'package:sooq/features/Cart/presentation/views/cart_view.dart';
 import 'package:sooq/features/Favorite/data/repos/favorites_repo.dart';
 import 'package:sooq/features/Favorite/presentation/cubit/favorites_cubit.dart';
-import 'package:sooq/features/Home/presentation/cubits/category_cubit.dart';
+import 'package:sooq/features/Home/data/models/category_model.dart';
+import 'package:sooq/features/Home/data/repos/home_repo/home_repo.dart';
+import 'package:sooq/features/Home/presentation/cubits/category_cubit/category_cubit.dart';
+import 'package:sooq/features/Home/presentation/cubits/home_cubit/home_cubit.dart';
+import 'package:sooq/features/Home/presentation/views/category_products_view.dart';
 import 'package:sooq/features/On_Boarding/presentation/views/onboarding_view.dart';
 import 'package:sooq/root.dart';
-
 
 abstract class AppRouter {
   static final router = GoRouter(
@@ -43,9 +46,7 @@ abstract class AppRouter {
         pageBuilder: (context, state) => CustomTransitionPage(
           child: MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (context) => AuthCubit(getIt<AuthRepoImpl>()),
-              ),
+              BlocProvider(create: (context) => AuthCubit(getIt<AuthRepoImpl>())),
               BlocProvider(create: (context) => PickImageCubit()),
             ],
             child: const SignupView(),
@@ -65,10 +66,8 @@ abstract class AppRouter {
             providers: [
               BlocProvider(create: (_) => CartCubit()),
               BlocProvider(create: (_) => CategoryCubit()),
-              BlocProvider(
-                create: (context) =>
-                    FavoritesCubit(FavoritesRepository())..init(),
-              ),
+              BlocProvider(create: (context) => FavoritesCubit(FavoritesRepositoryImpl())..init()),
+              BlocProvider(create: (_) => HomeCubit(getIt<HomeRepo>())..fetchHomeData()),
             ],
             child: const Root(),
           ),
@@ -88,7 +87,7 @@ abstract class AppRouter {
             child: MultiBlocProvider(
               providers: [
                 BlocProvider.value(value: context.read<CartCubit>()),
-            BlocProvider.value(value: context.read<FavoritesCubit>()),
+                BlocProvider.value(value: context.read<FavoritesCubit>()),
               ],
               child: const CartView(),
             ),
@@ -98,6 +97,26 @@ abstract class AppRouter {
           );
         },
       ),
+
+      GoRoute(
+        path: Routes.categoryProducts,
+        pageBuilder: (context, state) {
+          final params = state.extra as CategoryProductsViewParameters;
+          return CustomTransitionPage(
+            child: CategoryProductsView(params: params),
+            transitionsBuilder: (_, animation, __, child) =>
+                FadeTransition(opacity: animation, child: child),
+            transitionDuration: const Duration(milliseconds: 400),
+          );
+        },
+      ),
     ],
   );
+}
+
+class CategoryProductsViewParameters {
+  final CategoryModel category;
+  final FavoritesCubit favoritesCubit;
+  final CartCubit cartCubit;
+  CategoryProductsViewParameters({required this.category, required this.favoritesCubit, required this.cartCubit});
 }

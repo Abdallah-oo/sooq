@@ -10,13 +10,13 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
   final CategoryProductsRepo repo;
   final String categoryId;
 
-  static const int _pageSize = 7;
+  final int pageSize;
   final List<ProductModel> _products = [];
   int _nextPageKey = 0;
   bool _hasReachedMax = false;
   bool _isFetching = false;
 
-  FetchCategoryProductsCubit({required this.repo, required this.categoryId})
+  FetchCategoryProductsCubit({required this.repo, required this.categoryId,this.pageSize = 7})
     : super(FetchCategoryProductsInitial());
 
 
@@ -42,7 +42,7 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
 
   Future<void> _fetchPage() async {
     _isFetching = true;
-    final result = await repo.getProductsByCategory(categoryId: categoryId, page: _nextPageKey,pageSize: _pageSize);
+    final result = await repo.getProductsByCategory(categoryId: categoryId, page: _nextPageKey,pageSize:pageSize);
     _isFetching = false;
 
     result.fold(
@@ -59,7 +59,7 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
         }
       },
       (newproducts) {
-        if (newproducts.length < _pageSize) {
+        if (newproducts.length < pageSize) {
           _hasReachedMax = true;
         }
         _products.addAll(newproducts);
