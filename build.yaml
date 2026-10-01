@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      hive_ce_generator:hive_type_adapter_generator:
+        generate_for:
+          - lib/**.dart
+
+      hive_ce_generator:hive_registrar_intermediate_generator:
+        generate_for:
+          - lib/**.dart
+
+      hive_ce_generator:hive_registrar_generator:
+        generate_for:
+          - lib/**.dart

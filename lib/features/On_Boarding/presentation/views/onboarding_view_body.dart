@@ -19,17 +19,17 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
 
   final List<Map<String, String>> pages = [
     {
-      'image': 'assets/img/onboarding/b1.png',
+      'image': 'assets/img/onboarding/b1.webp',
       'title': 'Pure Freshness Daily',
       'subtitle': 'Premium-quality groceries, fresh produce, and essentials delivered to your doorstep with care.',
     },
     {
-      'image': 'assets/img/onboarding/b2.png',
+      'image': 'assets/img/onboarding/b2.webp',
       'title': 'Instant Delivery Experience',
       'subtitle': 'From order to doorstep in record time — seamless, fast, and always reliable.',
     },
     {
-      'image': 'assets/img/onboarding/b3.png',
+      'image': 'assets/img/onboarding/b3.webp',
       'title': 'Everything You Need',
       'subtitle': 'A complete hypermarket experience in one elegant app — food, essentials, and more.',
     },
@@ -93,8 +93,8 @@ class _OnboardingViewBodyState extends State<OnboardingViewBody> {
               ),
             ),),
           ),
-   
-     
+
+
       ],
     );
   }

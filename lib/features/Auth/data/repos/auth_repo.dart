@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:sooq/core/supabase/supabase_error.dart';
+import 'package:sooq/core/services/supabase/errors/supabase_error.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRepo {

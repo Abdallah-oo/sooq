@@ -9,7 +9,6 @@ import 'package:sooq/features/Home/presentation/views/home_view.dart';
 import 'package:sooq/features/Profile/profile.dart';
 import 'package:sooq/features/Search/presentation/views/search_view.dart';
 
-
 class Root extends StatefulWidget {
   const Root({super.key});
 
@@ -20,12 +19,7 @@ class Root extends StatefulWidget {
 class _RootState extends State<Root> {
   int currentIndex = 0;
 
-  final List<Widget> pages = const [
-    HomeView(),
-    FavoriteView(),
-    SearchView(),
-    ProfileView(),
-  ];
+  final List<Widget> pages = const [HomeView(), FavoriteView(), SearchView(), ProfileView()];
 
   final List<_NavItem> items = const [
     _NavItem(Icons.home, Icons.home_outlined, 'Home'),
@@ -51,11 +45,7 @@ class _RootState extends State<Root> {
               bottom: 20,
               left: 14,
               right: 14,
-              child: _ModernNavBar(
-                currentIndex: currentIndex,
-                items: items,
-                onTap: onTap,
-              ),
+              child: _ModernNavBar(currentIndex: currentIndex, items: items, onTap: onTap),
             ),
           ],
         ),
@@ -69,11 +59,7 @@ class _ModernNavBar extends StatelessWidget {
   final List<_NavItem> items;
   final Function(int) onTap;
 
-  const _ModernNavBar({
-    required this.currentIndex,
-    required this.items,
-    required this.onTap,
-  });
+  const _ModernNavBar({required this.currentIndex, required this.items, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +107,7 @@ class _ModernNavBar extends StatelessWidget {
                                   clipBehavior: Clip.none,
                                   children: [
                                     Icon(
-                                      isSelected
-                                          ? items[index].activeIcon
-                                          : items[index].icon,
+                                      isSelected ? items[index].activeIcon : items[index].icon,
                                       color: isSelected
                                           ? const Color(0xFF20B812)
                                           : AppColors.grey700,
@@ -141,11 +125,10 @@ class _ModernNavBar extends StatelessWidget {
                                           ),
                                           child: Text(
                                             '${state.count}',
-                                            style: AppTextStyles.caption
-                                                .copyWith(
-                                                  color: AppColors.white,
-                                                  fontSize: 9,
-                                                ),
+                                            style: AppTextStyles.caption.copyWith(
+                                              color: AppColors.white,
+                                              fontSize: 9,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -178,12 +161,8 @@ class _ModernNavBar extends StatelessWidget {
                               ),
                             ),
                             Icon(
-                              isSelected
-                                  ? items[index].activeIcon
-                                  : items[index].icon,
-                              color: isSelected
-                                  ? const Color(0xFF20B812)
-                                  : AppColors.grey700,
+                              isSelected ? items[index].activeIcon : items[index].icon,
+                              color: isSelected ? const Color(0xFF20B812) : AppColors.grey700,
                               size: 26,
                             ),
                           ],

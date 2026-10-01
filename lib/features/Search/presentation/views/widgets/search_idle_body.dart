@@ -12,7 +12,6 @@ class SearchIdleBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<SearchCubit>();
-    final trending = cubit.getTrending();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -23,7 +22,6 @@ class SearchIdleBody extends StatelessWidget {
           BlocBuilder<SearchCubit, SearchState>(
             buildWhen: (p, c) => p.recentSearches != c.recentSearches,
             builder: (context, state) {
-         
               if (state.recentSearches.isEmpty) return const SizedBox.shrink();
 
               return Column(
@@ -33,17 +31,12 @@ class SearchIdleBody extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const CustomText(
-                        text: 'Recent',
-                        style: AppTextStyles.titleSmall,
-                      ),
+                      const CustomText(text: 'Recent', style: AppTextStyles.titleSmall),
                       TextButton(
                         onPressed: cubit.clearAllRecent,
                         child: CustomText(
                           text: 'Clear all',
-                          style: AppTextStyles.labelMedium.copyWith(
-                            color: AppColors.error,
-                          ),
+                          style: AppTextStyles.labelMedium.copyWith(color: AppColors.error),
                         ),
                       ),
                     ],
@@ -69,20 +62,25 @@ class SearchIdleBody extends StatelessWidget {
           ),
 
           // ── Trending ──
-          const CustomText(
-            text: '🔥  Trending',
-            style: AppTextStyles.titleSmall,
-          ),
-          const Gap(12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: trending.map((product) {
-              return _TrendingChip(
-                name: product.name,
-                onTap: () => cubit.selectSuggestion(product.name),
+          BlocBuilder<SearchCubit, SearchState>(
+            buildWhen: (p, c) => p.trending != c.trending,
+            builder: (context, state) {
+              if (state.trending.isEmpty) return const SizedBox.shrink();
+
+              return Column(
+                children: [
+                  const CustomText(text: '🔥  Trending', style: AppTextStyles.titleSmall),
+                  const Gap(12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: state.trending.map((name) {
+                      return _TrendingChip(name: name, onTap: () => cubit.selectSuggestion(name));
+                    }).toList(),
+                  ),
+                ],
               );
-            }).toList(),
+            },
           ),
         ],
       ),
@@ -91,11 +89,7 @@ class SearchIdleBody extends StatelessWidget {
 }
 
 class _RecentChip extends StatelessWidget {
-  const _RecentChip({
-    required this.query,
-    required this.onTap,
-    required this.onRemove,
-  });
+  const _RecentChip({required this.query, required this.onTap, required this.onRemove});
 
   final String query;
   final VoidCallback onTap;
@@ -115,22 +109,14 @@ class _RecentChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.history_rounded,
-              size: 15,
-              color: AppColors.secondaryText,
-            ),
+            const Icon(Icons.history_rounded, size: 15, color: AppColors.secondaryText),
             const Gap(6),
             Text(query, style: AppTextStyles.labelMedium),
             const Gap(6),
             GestureDetector(
               onTap: onRemove,
               behavior: HitTestBehavior.opaque,
-              child: const Icon(
-                Icons.close_rounded,
-                size: 14,
-                color: AppColors.mutedText,
-              ),
+              child: const Icon(Icons.close_rounded, size: 14, color: AppColors.mutedText),
             ),
           ],
         ),
@@ -159,20 +145,15 @@ class _TrendingChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.trending_up_rounded,
-              size: 15,
-              color: AppColors.primary,
-            ),
+            const Icon(Icons.trending_up_rounded, size: 15, color: AppColors.primary),
             const Gap(6),
-            CustomText(text:  name,
-              style: AppTextStyles.labelMedium.copyWith(
-                color: AppColors.primary,
-              ),)
-         
+            CustomText(
+              text: name,
+              style: AppTextStyles.labelMedium.copyWith(color: AppColors.primary),
+            ),
           ],
         ),
       ),
     );
-  } 
+  }
 }

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:sooq/core/constances/category_constants.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
+import 'package:sooq/features/Home/presentation/cubits/home_cubit/home_cubit.dart';
 import 'package:sooq/features/Search/presentation/cubit/search_cubit.dart';
 
 class SearchFilterSheet extends StatefulWidget {
@@ -28,7 +28,7 @@ class SearchFilterSheet extends StatefulWidget {
 }
 
 class _SearchFilterSheetState extends State<SearchFilterSheet> {
-  late final ValueNotifier<SortBy> _sortBy;
+  late final ValueNotifier<SearchSortBy> _sortBy;
   late final ValueNotifier<double?> _minRating;
   late final ValueNotifier<String?> _category;
 
@@ -142,12 +142,12 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                     // ── Sort by ──
                     const _SectionHeader(title: 'Sort by'),
                     const Gap(12),
-                    ValueListenableBuilder<SortBy>(
+                    ValueListenableBuilder<SearchSortBy>(
                       valueListenable: _sortBy,
                       builder: (_, currentSort, __) => Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: SortBy.values.map((sort) {
+                        children: SearchSortBy.values.map((sort) {
                           final selected = currentSort == sort;
                           return GestureDetector(
                             onTap: () => _sortBy.value = sort,
@@ -197,7 +197,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                             selected: currentCategory == null,
                             onTap: () => _category.value = null,
                           ),
-                          ...CategoryConstants.items.map((cat) {
+                          ...context.read<HomeCubit>().state.categories.map((cat) {
                             return _CategoryChip(
                               label: cat.name,
                               selected: currentCategory == cat.name,
@@ -209,7 +209,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                     ),
                     const Gap(28),
 
-                    // ── Price range ── 
+                    // ── Price range ──
                     const _SectionHeader(title: 'Price range'),
                     const Gap(12),
                     Row(
@@ -324,13 +324,13 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     );
   }
 
-  String _sortLabel(SortBy sort) {
+  String _sortLabel(SearchSortBy sort) {
     return switch (sort) {
-      SortBy.relevance => 'Relevance',
-      SortBy.priceLow => 'Price: Low → High',
-      SortBy.priceHigh => 'Price: High → Low',
-      SortBy.rating => 'Top Rated',
-      SortBy.popularity => 'Most Popular',
+      SearchSortBy.relevance => 'Relevance',
+      SearchSortBy.priceLow => 'Price: Low → High',
+      SearchSortBy.priceHigh => 'Price: High → Low',
+      SearchSortBy.rating => 'Top Rated',
+      SearchSortBy.popularity => 'Most Popular',
     };
   }
 }
