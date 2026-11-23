@@ -14,4 +14,5 @@ abstract interface class AuthRepo {
     required String password,
   });
 
+  Future<Either<SupabaseError, Unit>> signOut();
 }

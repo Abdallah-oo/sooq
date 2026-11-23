@@ -42,7 +42,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           BlocBuilder<CartCubit, CartState>(
             builder: (context, state) {
               return GestureDetector(
-                onTap: () => context.push(Routes.cart, extra: context),
+                onTap: () => context.push(Routes.cart),
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [

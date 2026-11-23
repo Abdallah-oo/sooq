@@ -12,9 +12,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
     Bloc.observer = SetupBlocObserver();
-  setUpGetIt();
-  await _initHive(); 
+  await _initHive();
   await Supabase.initialize(url: SupabaseConstants.url, anonKey: SupabaseConstants.anonKey);
+  setUpGetIt(); // after Supabase.initialize: repos depend on Supabase.instance
 
   runApp(const SooqApp());
 }
