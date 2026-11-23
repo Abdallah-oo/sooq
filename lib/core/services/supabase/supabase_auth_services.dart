@@ -19,9 +19,18 @@ class AuthService {
     }
   }
 
-  Future<User> signUp(String email, String password) async {
+  Future<User> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
     try {
-      final res = await client.auth.signUp(email: email, password: password);
+      final res = await client.auth.signUp(
+        email: email,
+        password: password,
+        // Picked up by the `handle_new_user` DB trigger -> profiles.full_name
+        data: {'full_name': name},
+      );
       return res.user!;
     } catch (e) {
       throw _handleError(e);

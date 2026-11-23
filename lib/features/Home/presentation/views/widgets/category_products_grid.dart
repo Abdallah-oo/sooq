@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
 import 'package:sooq/features/Home/presentation/cubits/category_product_cubit/fetch_category_products_cubit.dart';
 import 'package:sooq/features/Home/presentation/views/widgets/product_card.dart';

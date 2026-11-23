@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sooq/core/utils/ld/pref_helper.dart';
 import 'package:sooq/features/Favorite/data/repos/favorites_repo.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
 

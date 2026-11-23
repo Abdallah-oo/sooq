@@ -1,6 +1,6 @@
 part of 'auth_cubit.dart';
 
-enum AuthAction { none, login, signup,  }
+enum AuthAction { none, login, signup, logout }
 
 enum AuthStatus { initial, loading, success, failure }
 
