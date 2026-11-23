@@ -29,8 +29,22 @@ class AuthRepoImpl implements AuthRepo {
     required String password,
   }) async{
    try {
-      final respons = await _authService.signUp(email, password);
+      final respons = await _authService.signUp(
+        name: name,
+        email: email,
+        password: password,
+      );
       return Right(respons);
+    } catch (e) {
+      return Left(SupabaseError(message: '$e'));
+    }
+  }
+
+  @override
+  Future<Either<SupabaseError, Unit>> signOut() async {
+    try {
+      await _authService.signOut();
+      return const Right(unit);
     } catch (e) {
       return Left(SupabaseError(message: '$e'));
     }

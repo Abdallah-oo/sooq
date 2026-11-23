@@ -15,18 +15,12 @@ class CategoryProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => FetchCategoryProductsCubit(
-            repo: getIt<CategoryProductsRepo>(),
-            categoryId: params.category.id,
-            pageSize: 20, 
-          )..fetchCategoryProducts(),
-        ),
-        BlocProvider.value(value: params.favoritesCubit),
-        BlocProvider.value(value: params.cartCubit),
-      ],
+    return BlocProvider(
+      create: (_) => FetchCategoryProductsCubit(
+        repo: getIt<CategoryProductsRepo>(),
+        categoryId: params.category.id,
+        pageSize: 20,
+      )..fetchCategoryProducts(),
       child: Scaffold(
         backgroundColor: AppColors.background,
         appBar: AppBar(

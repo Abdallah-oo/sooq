@@ -26,7 +26,7 @@ class CartBar extends StatelessWidget {
             duration: const Duration(milliseconds: 250),
             opacity: isEmpty ? 0 : 1,
             child: GestureDetector(
-              onTap: () => context.push(Routes.cart, extra: context),
+              onTap: () => context.push(Routes.cart),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(

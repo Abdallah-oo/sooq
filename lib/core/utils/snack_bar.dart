@@ -140,7 +140,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: widget.color.withOpacity(0.4),
+                  color: widget.color.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(20),
 
                   boxShadow: AppColors.shadowMd,

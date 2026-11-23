@@ -57,4 +57,25 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  //Logout
+  Future<void> onTapLogout() async {
+    if (state.status == AuthStatus.loading) return;
+
+    emit(const AuthState(action: AuthAction.logout, status: AuthStatus.loading));
+
+    final result = await authRepo.signOut();
+    result.fold(
+      (error) => emit(
+        AuthState(
+          action: AuthAction.logout,
+          status: AuthStatus.failure,
+          errorMessage: error.message,
+        ),
+      ),
+      (_) => emit(
+        const AuthState(action: AuthAction.logout, status: AuthStatus.success),
+      ),
+    );
+  }
+
 }
