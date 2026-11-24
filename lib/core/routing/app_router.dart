@@ -2,7 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sooq/core/routing/routes.dart';
+import 'package:sooq/core/config/map_config.dart';
 import 'package:sooq/core/utils/di/get_it.dart';
+import 'package:sooq/features/Address/data/repos/address_repo.dart';
+import 'package:sooq/features/Address/data/services/geocoding_service.dart';
+import 'package:sooq/features/Address/data/services/location_service.dart';
+import 'package:sooq/features/Address/presentation/cubits/address_form_cubit/address_form_cubit.dart';
+import 'package:sooq/features/Address/presentation/cubits/address_picker_cubit/address_picker_cubit.dart';
+import 'package:sooq/features/Address/presentation/cubits/addresses_cubit/addresses_cubit.dart';
+import 'package:sooq/features/Address/presentation/route_args/address_route_args.dart';
+import 'package:sooq/features/Address/presentation/views/address_form_view.dart';
+import 'package:sooq/features/Address/presentation/views/address_picker_view.dart';
+import 'package:sooq/features/Address/presentation/views/addresses_view.dart';
 import 'package:sooq/features/Auth/data/repos/auth_repo.dart';
 import 'package:sooq/features/Auth/presentation/views/Login_Views/login_view.dart';
 import 'package:sooq/features/Auth/presentation/views/Signup_Views/signup_view.dart';
@@ -19,6 +30,15 @@ import 'package:sooq/root.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AppRouter {
+  static CustomTransitionPage<T> _fadePage<T>(Widget child, {int milliseconds = 400}) {
+    return CustomTransitionPage<T>(
+      child: child,
+      transitionsBuilder: (_, animation, __, child) =>
+          FadeTransition(opacity: animation, child: child),
+      transitionDuration: Duration(milliseconds: milliseconds),
+    );
+  }
+
   static final router = GoRouter(
     // Returning users with a live Supabase session skip onboarding/login.
     redirect: (context, state) {
@@ -91,6 +111,52 @@ abstract class AppRouter {
               FadeTransition(opacity: animation, child: child),
           transitionDuration: const Duration(milliseconds: 500),
         ),
+      ),
+
+      //addresses (pass `extra: true` for selection mode, e.g. from checkout)
+      GoRoute(
+        path: Routes.addresses,
+        pageBuilder: (context, state) {
+          final selectMode = (state.extra as bool?) ?? false;
+          return _fadePage(
+            BlocProvider(
+              create: (_) => AddressesCubit(getIt<AddressRepo>())..fetchAddresses(),
+              child: AddressesView(selectMode: selectMode),
+            ),
+          );
+        },
+      ),
+
+      //address map picker
+      GoRoute(
+        path: Routes.addressPicker,
+        pageBuilder: (context, state) {
+          final args = state.extra as AddressPickerArgs;
+          return _fadePage(
+            BlocProvider(
+              create: (_) => AddressPickerCubit(
+                location: getIt<LocationService>(),
+                geocoding: getIt<GeocodingService>(),
+                initialCenter: args.editing?.location ?? MapConfig.defaultCenter,
+              ),
+              child: AddressPickerView(args: args),
+            ),
+          );
+        },
+      ),
+
+      //address details form
+      GoRoute(
+        path: Routes.addressForm,
+        pageBuilder: (context, state) {
+          final args = state.extra as AddressFormArgs;
+          return _fadePage(
+            BlocProvider(
+              create: (_) => AddressFormCubit(getIt<AddressRepo>()),
+              child: AddressFormView(args: args),
+            ),
+          );
+        },
       ),
 
       GoRoute(

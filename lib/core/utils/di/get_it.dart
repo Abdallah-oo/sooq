@@ -1,6 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:sooq/core/services/supabase/supabase_auth_services.dart';
 import 'package:sooq/core/services/supabase/supabase_client.dart';
+import 'package:sooq/features/Address/data/repos/address_repo.dart';
+import 'package:sooq/features/Address/data/repos/address_repo_impl.dart';
+import 'package:sooq/features/Address/data/services/geocoding_service.dart';
+import 'package:sooq/features/Address/data/services/location_service.dart';
 import 'package:sooq/features/Auth/data/repos/auth_repo.dart';
 import 'package:sooq/features/Auth/data/repos/auth_repo_impl.dart';
 import 'package:sooq/features/Home/data/local/products_local_data_source.dart';
@@ -16,6 +20,9 @@ void setUpGetIt() {
   getIt.registerLazySingleton<SupabaseClient>(() => SupabaseClientManager.client);
   getIt.registerLazySingleton<AuthService>(() => AuthService(getIt<SupabaseClient>()));
   getIt.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(getIt<AuthService>()));
+  getIt.registerLazySingleton<AddressRepo>(() => AddressRepoImpl(getIt<SupabaseClient>()));
+  getIt.registerLazySingleton<LocationService>(() => GeolocatorLocationService());
+  getIt.registerLazySingleton<GeocodingService>(() => NominatimGeocodingService());
   getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(getIt<SupabaseClient>()));
   getIt.registerLazySingleton<CategoryProductsRepo>(
     () => CategoryProductRepoImpl(getIt<SupabaseClient>(), ProductsLocalDataSource()),
