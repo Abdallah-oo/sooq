@@ -27,92 +27,92 @@ class ProfileView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                const Gap(30),
-                _buildSection(
-                  title: 'My Account',
-                  items: [
-                    _buildMenuTile(
-                      icon: Icons.person_outline,
-                      iconColor: Colors.blue,
-                      title: 'My Profile',
-                      onTap: () {
-                        // Navigate to Profile Page
-                      },
-                    ),
-                    _buildMenuTile(
-                      icon: Icons.receipt_long_outlined,
-                      iconColor: Colors.orange,
-                      title: 'My Orders',
-                      onTap: () {},
-                    ),
-                    _buildMenuTile(
-                      icon: Icons.location_on_outlined,
-                      iconColor: Colors.purple,
-                      title: 'My Addresses',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                const Gap(16),
-                _buildSection(
-                  title: 'App Settings',
-                  items: [
-                    _buildMenuTile(
-                      icon: Icons.notifications_outlined,
-                      iconColor: AppColors.error,
-                      title: 'Notifications',
-                      onTap: () {},
-                    ),
-                    _buildMenuTile(
-                      icon: Icons.language_outlined,
-                      iconColor: Colors.teal,
-                      title: 'Language',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                const Gap(16),
-                _buildSection(
-                  title: 'Support',
-                  items: [
-                    _buildMenuTile(
-                      icon: Icons.headset_mic_outlined,
-                      iconColor: Colors.green,
-                      title: 'Customer Service',
-                      onTap: () {},
-                    ),
-                    _buildMenuTile(
-                      icon: Icons.policy_outlined,
-                      iconColor: Colors.grey,
-                      title: 'Privacy Policy',
-                      onTap: () {},
-                    ),
-                    _buildMenuTile(
-                      icon: Icons.info_outline,
-                      iconColor: Colors.indigo,
-                      title: 'About Us',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                const Gap(24),
-                _buildMenuTile(
-                  icon: Icons.logout,
-                  iconColor: AppColors.error,
-                  title: 'Logout',
-                  isLogout: true,
-                  onTap: () => _confirmLogout(context),
-                ),
-                const Gap(100),
-              ],
-            ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              const Gap(30),
+              _buildSection(
+                title: 'My Account',
+                items: [
+                  _buildMenuTile(
+                    icon: Icons.person_outline,
+                    iconColor: Colors.blue,
+                    title: 'My Profile',
+                    onTap: () {
+                      // Navigate to Profile Page
+                    },
+                  ),
+                  _buildMenuTile(
+                    icon: Icons.receipt_long_outlined,
+                    iconColor: Colors.orange,
+                    title: 'My Orders',
+                    onTap: () {},
+                  ),
+                  _buildMenuTile(
+                    icon: Icons.location_on_outlined,
+                    iconColor: Colors.purple,
+                    title: 'My Addresses',
+                    onTap: () => context.push(Routes.addresses),
+                  ),
+                ],
+              ),
+              const Gap(16),
+              _buildSection(
+                title: 'App Settings',
+                items: [
+                  _buildMenuTile(
+                    icon: Icons.notifications_outlined,
+                    iconColor: AppColors.error,
+                    title: 'Notifications',
+                    onTap: () {},
+                  ),
+                  _buildMenuTile(
+                    icon: Icons.language_outlined,
+                    iconColor: Colors.teal,
+                    title: 'Language',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              const Gap(16),
+              _buildSection(
+                title: 'Support',
+                items: [
+                  _buildMenuTile(
+                    icon: Icons.headset_mic_outlined,
+                    iconColor: Colors.green,
+                    title: 'Customer Service',
+                    onTap: () {},
+                  ),
+                  _buildMenuTile(
+                    icon: Icons.policy_outlined,
+                    iconColor: Colors.grey,
+                    title: 'Privacy Policy',
+                    onTap: () {},
+                  ),
+                  _buildMenuTile(
+                    icon: Icons.info_outline,
+                    iconColor: Colors.indigo,
+                    title: 'About Us',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              const Gap(24),
+              _buildMenuTile(
+                icon: Icons.logout,
+                iconColor: AppColors.error,
+                title: 'Logout',
+                isLogout: true,
+                onTap: () => _confirmLogout(context),
+              ),
+              const Gap(100),
+            ],
           ),
         ),
+      ),
       ),
     );
   }

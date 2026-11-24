@@ -11,7 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-    Bloc.observer = SetupBlocObserver();
+  Bloc.observer = SetupBlocObserver();
   await _initHive();
   await Supabase.initialize(url: SupabaseConstants.url, anonKey: SupabaseConstants.anonKey);
   setUpGetIt(); // after Supabase.initialize: repos depend on Supabase.instance
@@ -30,7 +30,5 @@ void _registerHiveAdapters() {
 }
 
 Future<void> _openHiveBoxes() async {
-  await Future.wait([
-    Hive.openBox(HiveService.productsBoxName), // من غير <List<ProductModel>>
-  ]);
+  await Future.wait([Hive.openBox(HiveService.productsBoxName)]);
 }

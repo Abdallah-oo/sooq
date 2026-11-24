@@ -19,7 +19,7 @@ class CustomSnackBar {
 
     messenger.showSnackBar(
       SnackBar(
-          margin: const EdgeInsets.only(bottom: 30),
+        margin: const EdgeInsets.only(bottom: 30),
         duration: duration,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -47,30 +47,15 @@ class CustomSnackBar {
   }
 
   static void error(BuildContext context, String message) {
-    _show(
-      context,
-      message: message,
-      icon: Icons.error,
-      color: Colors.red,
-    );
+    _show(context, message: message, icon: Icons.error, color: Colors.red);
   }
 
   static void info(BuildContext context, String message) {
-    _show(
-      context,
-      message: message,
-      icon: Icons.info_rounded,
-      color: Colors.blue,
-    );
+    _show(context, message: message, icon: Icons.info_rounded, color: Colors.blue);
   }
 
   static void warning(BuildContext context, String message) {
-    _show(
-      context,
-      message: message,
-      icon: Icons.warning_rounded,
-      color: AppColors.warning,
-    );
+    _show(context, message: message, icon: Icons.warning_rounded, color: AppColors.warning);
   }
 }
 
@@ -91,8 +76,7 @@ class _ToastWidget extends StatefulWidget {
   State<_ToastWidget> createState() => _ToastWidgetState();
 }
 
-class _ToastWidgetState extends State<_ToastWidget>
-    with SingleTickerProviderStateMixin {
+class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<Offset> slide;
   late Animation<double> fade;
@@ -101,10 +85,7 @@ class _ToastWidgetState extends State<_ToastWidget>
   void initState() {
     super.initState();
 
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
+    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
 
     slide = Tween(
       begin: const Offset(0, -1),
@@ -135,10 +116,7 @@ class _ToastWidgetState extends State<_ToastWidget>
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: widget.color.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(20),
@@ -152,7 +130,7 @@ class _ToastWidgetState extends State<_ToastWidget>
                       height: 40,
                       width: 40,
                       decoration: BoxDecoration(
-                        color: widget.color.withOpacity(0.1),
+                        color: AppColors.surface.withOpacity(0.4),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(widget.icon, color: widget.color, size: 22),
@@ -174,14 +152,10 @@ class _ToastWidgetState extends State<_ToastWidget>
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: AppColors.error.withOpacity(0.2),
+                          color: AppColors.surface.withOpacity(0.4),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          Icons.close,
-                          size: 18,
-                          color: AppColors.error,
-                        ),
+                        child: const Icon(Icons.close, size: 18, color: AppColors.error),
                       ),
                     ),
                   ],
