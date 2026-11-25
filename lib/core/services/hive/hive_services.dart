@@ -22,7 +22,7 @@ class HiveService {
 
   // cart local storage fun
   static Future<void> saveCartProducts(List<CartItem> items) async {
-    await _cartBox.put(_itemsKey, items.map((e) => e.toJson()).toList());
+    await _cartBox.put(_itemsKey, items);
   }
 
   static List<CartItem> getCartProducts() {
