@@ -19,13 +19,23 @@ import 'package:sooq/features/Auth/presentation/views/Login_Views/login_view.dar
 import 'package:sooq/features/Auth/presentation/views/Signup_Views/signup_view.dart';
 import 'package:sooq/features/Auth/presentation/cubits/Auth_Cubit/auth_cubit.dart';
 import 'package:sooq/features/Auth/presentation/cubits/Pick_Image_Cubit/pick_image_cubit.dart';
+import 'package:sooq/features/Cart/presentation/cubits/cart_cubit.dart';
 import 'package:sooq/features/Cart/presentation/views/cart_view.dart';
+import 'package:sooq/features/Checkout/presentation/cubit/checkout_cubit.dart';
+import 'package:sooq/features/Checkout/presentation/views/checkout_view.dart';
 import 'package:sooq/features/Home/data/models/category_model.dart';
 import 'package:sooq/features/Home/data/repos/home_repo/home_repo.dart';
 import 'package:sooq/features/Home/presentation/cubits/category_cubit/category_cubit.dart';
 import 'package:sooq/features/Home/presentation/cubits/home_cubit/home_cubit.dart';
 import 'package:sooq/features/Home/presentation/views/category_products_view.dart';
 import 'package:sooq/features/On_Boarding/presentation/views/onboarding_view.dart';
+import 'package:sooq/features/Orders/data/models/order_model.dart';
+import 'package:sooq/features/Orders/data/repos/order_repo.dart';
+import 'package:sooq/features/Orders/presentation/cubits/order_details_cubit/order_details_cubit.dart';
+import 'package:sooq/features/Orders/presentation/cubits/orders_cubit/orders_cubit.dart';
+import 'package:sooq/features/Orders/presentation/views/order_details_view.dart';
+import 'package:sooq/features/Orders/presentation/views/order_success_view.dart';
+import 'package:sooq/features/Orders/presentation/views/orders_view.dart';
 import 'package:sooq/root.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -154,6 +164,53 @@ abstract class AppRouter {
             BlocProvider(
               create: (_) => AddressFormCubit(getIt<AddressRepo>()),
               child: AddressFormView(args: args),
+            ),
+          );
+        },
+      ),
+
+      //checkout (address + payment + server-priced summary)
+      GoRoute(
+        path: Routes.checkout,
+        pageBuilder: (context, state) => _fadePage(
+          BlocProvider(
+            create: (context) => CheckoutCubit(
+              orderRepo: getIt<OrderRepo>(),
+              addressRepo: getIt<AddressRepo>(),
+              items: context.read<CartCubit>().state.items,
+            )..init(),
+            child: const CheckoutView(),
+          ),
+        ),
+      ),
+
+      //order placed
+      GoRoute(
+        path: Routes.orderSuccess,
+        pageBuilder: (context, state) =>
+            _fadePage(OrderSuccessView(order: state.extra as OrderModel)),
+      ),
+
+      //my orders
+      GoRoute(
+        path: Routes.orders,
+        pageBuilder: (context, state) => _fadePage(
+          BlocProvider(
+            create: (_) => OrdersCubit(getIt<OrderRepo>())..fetchOrders(),
+            child: const OrdersView(),
+          ),
+        ),
+      ),
+
+      //order details (extra: order id)
+      GoRoute(
+        path: Routes.orderDetails,
+        pageBuilder: (context, state) {
+          final orderId = state.extra as String;
+          return _fadePage(
+            BlocProvider(
+              create: (_) => OrderDetailsCubit(getIt<OrderRepo>(), orderId)..fetchOrder(),
+              child: const OrderDetailsView(),
             ),
           );
         },

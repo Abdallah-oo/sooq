@@ -8,6 +8,7 @@ import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/snack_bar.dart';
+import 'package:sooq/core/widgets/message_state.dart';
 import 'package:sooq/features/Address/data/models/address_model.dart';
 import 'package:sooq/features/Address/presentation/cubits/addresses_cubit/addresses_cubit.dart';
 import 'package:sooq/features/Address/presentation/route_args/address_route_args.dart';
@@ -43,7 +44,7 @@ class AddressesView extends StatelessWidget {
             return const Center(child: CircularProgressIndicator(color: AppColors.primary));
           }
           if (state.loadError != null) {
-            return _MessageState(
+            return MessageState(
               icon: Icons.error_outline_rounded,
               title: 'Something went wrong',
               message: state.loadError!,
@@ -52,7 +53,7 @@ class AddressesView extends StatelessWidget {
             );
           }
           if (state.addresses.isEmpty) {
-            return const _MessageState(
+            return const MessageState(
               icon: Icons.location_off_outlined,
               title: 'No addresses yet',
               message: 'Add a delivery address to get your order delivered to your door.',
@@ -156,49 +157,5 @@ class AddressesView extends StatelessWidget {
       ),
     );
     return confirmed ?? false;
-  }
-}
-
-class _MessageState extends StatelessWidget {
-  const _MessageState({
-    required this.icon,
-    required this.title,
-    required this.message,
-    this.actionLabel,
-    this.onAction,
-  });
-
-  final IconData icon;
-  final String title;
-  final String message;
-  final String? actionLabel;
-  final VoidCallback? onAction;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 72, color: AppColors.grey300),
-            const Gap(16),
-            CustomText(text: title, style: AppTextStyles.titleMedium, align: TextAlign.center),
-            const Gap(8),
-            CustomText(
-              text: message,
-              maxLines: 3,
-              align: TextAlign.center,
-              style: AppTextStyles.bodyMedium,
-            ),
-            if (actionLabel != null) ...[
-              const Gap(16),
-              TextButton(onPressed: onAction, child: Text(actionLabel!)),
-            ],
-          ],
-        ),
-      ),
-    );
   }
 }

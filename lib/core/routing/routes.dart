@@ -7,5 +7,9 @@ class Routes {
   static const String addresses = '/Addresses';
   static const String addressPicker = '/AddressPicker';
   static const String addressForm = '/AddressForm';
+  static const String checkout = '/Checkout';
+  static const String orders = '/Orders';
+  static const String orderDetails = '/OrderDetails';
+  static const String orderSuccess = '/OrderSuccess';
 
 }

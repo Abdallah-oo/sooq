@@ -6,6 +6,22 @@ import 'package:sooq/core/services/supabase/errors/supabase_error.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseErrorHandler {
+  /// Codes raised by the SQL functions (see supabase/migrations) -> user messages.
+  static const Map<String, String> _businessMessages = {
+    'NOT_AUTHENTICATED': 'Please login first',
+    'EMPTY_CART': 'Your cart is empty',
+    'INVALID_ITEMS': 'Some items in your cart are invalid',
+    'PRODUCT_UNAVAILABLE': 'Some products are no longer available, please review your cart',
+    'ADDRESS_NOT_FOUND': 'Please choose a delivery address',
+    'ADDRESS_PHONE_REQUIRED': 'Add a phone number to your delivery address',
+    'PROMO_INVALID': 'Invalid or expired promo code',
+    'PROMO_MIN_ORDER': 'Your order does not reach the minimum amount for this code',
+    'PRICE_CHANGED': 'Prices have changed, please review your order',
+    'PAYMENT_METHOD_UNSUPPORTED': 'This payment method is not available yet',
+    'ORDER_NOT_FOUND': 'Order not found',
+    'ORDER_NOT_CANCELLABLE': 'This order can no longer be cancelled',
+  };
+
   static SupabaseError handleSupabaseError(Object e) {
     if (e is AuthException) {
       final msg = e.message.toLowerCase();
@@ -44,6 +60,12 @@ class SupabaseErrorHandler {
           return SupabaseError(message: 'Some of the entered data is invalid');
         case 'PGRST301': // JWT expired / invalid
           return SupabaseError(message: 'Session expired, login again');
+        case 'PGRST116': // .single() found no row
+          return SupabaseError(message: 'Item not found');
+        case 'P0001': // raise exception 'CODE' inside our SQL functions
+          return SupabaseError(
+            message: _businessMessages[e.message] ?? 'Something went wrong, please try again',
+          );
       }
       return SupabaseError(message: 'Something went wrong, please try again');
     }

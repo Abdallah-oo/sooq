@@ -25,7 +25,7 @@ class CartViewBody extends StatelessWidget {
                   children: [
                     // ── Scrollable item list ──
                     ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 350),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 230),
                       itemCount: state.items.length,
                       separatorBuilder: (_, __) => const Gap(12),
                       itemBuilder: (context, index) {

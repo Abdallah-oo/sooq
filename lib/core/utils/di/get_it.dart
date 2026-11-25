@@ -12,6 +12,8 @@ import 'package:sooq/features/Home/data/repos/category_product_repo/category_pro
 import 'package:sooq/features/Home/data/repos/category_product_repo/category_product_repo_impl.dart';
 import 'package:sooq/features/Home/data/repos/home_repo/home_repo.dart';
 import 'package:sooq/features/Home/data/repos/home_repo/home_repo_impl.dart';
+import 'package:sooq/features/Orders/data/repos/order_repo.dart';
+import 'package:sooq/features/Orders/data/repos/order_repo_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final getIt = GetIt.instance;
@@ -23,6 +25,7 @@ void setUpGetIt() {
   getIt.registerLazySingleton<AddressRepo>(() => AddressRepoImpl(getIt<SupabaseClient>()));
   getIt.registerLazySingleton<LocationService>(() => GeolocatorLocationService());
   getIt.registerLazySingleton<GeocodingService>(() => NominatimGeocodingService());
+  getIt.registerLazySingleton<OrderRepo>(() => OrderRepoImpl(getIt<SupabaseClient>()));
   getIt.registerLazySingleton<HomeRepo>(() => HomeRepoImpl(getIt<SupabaseClient>()));
   getIt.registerLazySingleton<CategoryProductsRepo>(
     () => CategoryProductRepoImpl(getIt<SupabaseClient>(), ProductsLocalDataSource()),

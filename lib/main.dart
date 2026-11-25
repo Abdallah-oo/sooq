@@ -5,13 +5,14 @@ import 'package:sooq/core/services/hive/hive_services.dart';
 import 'package:sooq/core/services/supabase/supabase_constants.dart';
 import 'package:sooq/core/utils/di/get_it.dart';
 import 'package:sooq/core/utils/setup_bloc_observer.dart';
+import 'package:sooq/features/Cart/data/models/cart_item.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
 import 'package:sooq/sooq_app.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = SetupBlocObserver();
+    Bloc.observer = SetupBlocObserver();
   await _initHive();
   await Supabase.initialize(url: SupabaseConstants.url, anonKey: SupabaseConstants.anonKey);
   setUpGetIt(); // after Supabase.initialize: repos depend on Supabase.instance
@@ -27,8 +28,12 @@ Future<void> _initHive() async {
 
 void _registerHiveAdapters() {
   Hive.registerAdapter((ProductModelAdapter()));
+  Hive.registerAdapter((CartItemAdapter()));
 }
 
 Future<void> _openHiveBoxes() async {
-  await Future.wait([Hive.openBox(HiveService.productsBoxName)]);
+  await Future.wait([
+    Hive.openBox(HiveService.productsBoxName),
+    Hive.openBox(HiveService.cartBoxName),
+  ]);
 }

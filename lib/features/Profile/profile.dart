@@ -48,7 +48,7 @@ class ProfileView extends StatelessWidget {
                     icon: Icons.receipt_long_outlined,
                     iconColor: Colors.orange,
                     title: 'My Orders',
-                    onTap: () {},
+                    onTap: () => context.push(Routes.orders),
                   ),
                   _buildMenuTile(
                     icon: Icons.location_on_outlined,
