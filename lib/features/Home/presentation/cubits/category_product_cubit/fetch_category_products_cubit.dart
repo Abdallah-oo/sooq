@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
 import 'package:sooq/features/Home/data/repos/category_product_repo/category_product_repo.dart';
-
 part 'fetch_category_products_state.dart';
 
 class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
@@ -16,10 +15,8 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
   bool _hasReachedMax = false;
   bool _isFetching = false;
 
-  FetchCategoryProductsCubit({required this.repo, required this.categoryId,this.pageSize = 7})
+  FetchCategoryProductsCubit({required this.repo, required this.categoryId, this.pageSize = 7})
     : super(FetchCategoryProductsInitial());
-
-
 
   Future<void> fetchCategoryProducts() async {
     _products.clear();
@@ -28,10 +25,13 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
     final cached = repo.getCachedFirstPage(categoryId);
     if (cached.isNotEmpty) {
       _products.addAll(cached);
+      if (isClosed) return;
       emit(
         FetchCategoryProductsSuccess(products: List.unmodifiable(_products), hasReachedMax: false),
       );
     } else {
+      if (isClosed) return;
+
       emit(FetchCategoryProductsLoading());
     }
 
@@ -42,14 +42,20 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
 
   Future<void> _fetchPage() async {
     _isFetching = true;
-    final result = await repo.getProductsByCategory(categoryId: categoryId, page: _nextPageKey,pageSize:pageSize);
+    final result = await repo.getProductsByCategory(
+      categoryId: categoryId,
+      page: _nextPageKey,
+      pageSize: pageSize,
+    );
     _isFetching = false;
 
     result.fold(
       (error) {
         if (_products.isEmpty) {
+          if (isClosed) return;
           emit(FetchCategoryProductsFailure(errorMessage: error.message));
         } else {
+          if (isClosed) return;
           emit(
             FetchCategoryProductsLoadMoreFailure(
               products: List.unmodifiable(_products),
@@ -64,6 +70,7 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
         }
         _products.addAll(newproducts);
         _nextPageKey++;
+        if (isClosed) return;
         emit(
           FetchCategoryProductsSuccess(
             products: List.unmodifiable(_products),
@@ -77,6 +84,7 @@ class FetchCategoryProductsCubit extends Cubit<FetchCategoryProductsState> {
   /// جلب الصفحة اللي بعد كده
   Future<void> fetchNextPage() async {
     if (_isFetching || _hasReachedMax) return;
+    if (isClosed) return;
     emit(FetchCategoryProductsLoadingMore(products: List.unmodifiable(_products)));
     await _fetchPage();
   }
