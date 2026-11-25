@@ -1,9 +1,24 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sooq/core/services/hive/hive_services.dart';
+import 'package:sooq/features/Cart/data/models/cart_item.dart';
 import 'package:sooq/features/Home/data/models/product_model.dart';
+
+// Existing code keeps importing CartItem through this file.
+export 'package:sooq/features/Cart/data/models/cart_item.dart';
+
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(const CartState());
+  /// The cart is restored synchronously from [storage], so it is ready on the first frame.
+  CartCubit() : super(CartState(items: HiveService.getCartProducts()));
+
+  /// Every change (add / remove / clear) is persisted automatically.
+  @override
+  void onChange(Change<CartState> change) {
+    super.onChange(change);
+    unawaited(HiveService.saveCartProducts(change.nextState.items));
+  }
 
   void addItem(ProductModel product) {
     final items = List<CartItem>.from(state.items);

@@ -1,13 +1,4 @@
 part of 'cart_cubit.dart';
-class CartItem {
-  final ProductModel product;
-  final int quantity;
-
-  const CartItem({required this.product, required this.quantity});
-
-  CartItem copyWith({int? quantity}) =>
-      CartItem(product: product, quantity: quantity ?? this.quantity);
-}
 
 class CartState {
   final List<CartItem> items;
@@ -16,6 +7,7 @@ class CartState {
 
   int get totalCount => items.fold(0, (sum, item) => sum + item.quantity);
 
+  /// Display estimate only: the real total (delivery, promo) comes from the server at checkout.
   double get totalPrice =>
       items.fold(0, (sum, item) => sum + item.product.price * item.quantity);
 
