@@ -7,6 +7,7 @@ import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/money.dart';
+import 'package:sooq/features/Orders/data/models/order_enums.dart';
 import 'package:sooq/features/Orders/data/models/order_model.dart';
 
 class OrderSuccessView extends StatelessWidget {
@@ -58,8 +59,10 @@ class OrderSuccessView extends StatelessWidget {
                   style: AppTextStyles.titleMedium.copyWith(color: AppColors.primary),
                 ),
                 const Gap(12),
-                const CustomText(
-                  text: 'We received your order and will confirm it shortly.',
+                CustomText(
+                  text: order.paymentStatus == PaymentStatus.paid
+                      ? 'Payment received. We will confirm your order shortly.'
+                      : 'We received your order and will confirm it shortly.',
                   maxLines: 2,
                   align: TextAlign.center,
                   style: AppTextStyles.bodyMedium,
@@ -76,7 +79,12 @@ class OrderSuccessView extends StatelessWidget {
                     children: [
                       _Row(label: 'Total', value: Money.format(order.total)),
                       const Gap(8),
-                      _Row(label: 'Payment', value: order.paymentMethod.label),
+                      _Row(
+                        label: 'Payment',
+                        value: order.paymentMethod.isOnline
+                            ? '${order.paymentMethod.label} · ${order.paymentStatus.label}'
+                            : order.paymentMethod.label,
+                      ),
                     ],
                   ),
                 ),

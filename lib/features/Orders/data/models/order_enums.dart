@@ -18,16 +18,21 @@ enum OrderStatus {
 }
 
 enum PaymentMethod {
-  cod('cod', 'Cash on delivery', true),
-  card('card', 'Card', false);
+  cod('cod', 'Cash on delivery', 'Pay in cash when your order arrives', false),
+  card('card', 'Credit / debit card', 'Pay securely with your bank card', true),
+  wallet('wallet', 'Mobile wallet', 'Pay with your mobile wallet number', true);
 
-  const PaymentMethod(this.dbValue, this.label, this.isAvailable);
+  const PaymentMethod(this.dbValue, this.label, this.description, this.isOnline);
 
   final String dbValue;
   final String label;
+  final String description;
 
-  /// Methods the checkout screen offers (Card arrives with the Paymob phase).
-  final bool isAvailable;
+  /// Paid through Paymob (card / wallet) instead of cash on delivery.
+  final bool isOnline;
+
+  /// Paymob charges in EGP only, so online methods exist only in that currency.
+  bool isAvailableIn(String currencyCode) => !isOnline || currencyCode.toUpperCase() == 'EGP';
 
   static PaymentMethod fromDb(String? value) => PaymentMethod.values.firstWhere(
     (method) => method.dbValue == value,

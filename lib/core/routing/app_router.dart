@@ -36,6 +36,9 @@ import 'package:sooq/features/Orders/presentation/cubits/orders_cubit/orders_cub
 import 'package:sooq/features/Orders/presentation/views/order_details_view.dart';
 import 'package:sooq/features/Orders/presentation/views/order_success_view.dart';
 import 'package:sooq/features/Orders/presentation/views/orders_view.dart';
+import 'package:sooq/features/Payment/data/repos/payment_repo.dart';
+import 'package:sooq/features/Payment/presentation/cubit/payment_cubit.dart';
+import 'package:sooq/features/Payment/presentation/views/payment_view.dart';
 import 'package:sooq/root.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -189,6 +192,24 @@ abstract class AppRouter {
         path: Routes.orderSuccess,
         pageBuilder: (context, state) =>
             _fadePage(OrderSuccessView(order: state.extra as OrderModel)),
+      ),
+
+      //online payment (extra: the order to pay)
+      GoRoute(
+        path: Routes.payment,
+        pageBuilder: (context, state) {
+          final order = state.extra as OrderModel;
+          return _fadePage(
+            BlocProvider(
+              create: (_) => PaymentCubit(
+                paymentRepo: getIt<PaymentRepo>(),
+                orderRepo: getIt<OrderRepo>(),
+                order: order,
+              )..start(),
+              child: const PaymentView(),
+            ),
+          );
+        },
       ),
 
       //my orders

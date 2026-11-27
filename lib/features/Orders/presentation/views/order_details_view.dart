@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sooq/core/routing/routes.dart';
 import 'package:sooq/core/theme/app_colors.dart';
 import 'package:sooq/core/theme/app_text_styles.dart';
 import 'package:sooq/core/utils/app_date.dart';
+import 'package:sooq/core/utils/custom_button.dart';
 import 'package:sooq/core/utils/custom_text.dart';
 import 'package:sooq/core/utils/money.dart';
 import 'package:sooq/core/utils/snack_bar.dart';
@@ -60,6 +63,12 @@ class _Content extends StatelessWidget {
 
   final OrderModel order;
   final bool isCancelling;
+
+  Future<void> _pay(BuildContext context) async {
+    await context.push(Routes.payment, extra: order);
+    // Back from the payment screen without paying: show the latest status.
+    if (context.mounted) context.read<OrderDetailsCubit>().fetchOrder(silent: true);
+  }
 
   Future<void> _confirmCancel(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -172,8 +181,24 @@ class _Content extends StatelessWidget {
           deliveryFee: order.deliveryFee,
           total: order.total,
         ),
-        if (order.canCancel) ...[
+        if (order.canPay) ...[
           const Gap(24),
+          SizedBox(
+            width: double.infinity,
+            child: CustomButton(
+              radius: 16,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              onPressed: isCancelling ? null : () => _pay(context),
+              child: CustomText(
+                text: 'Pay now  ·  ${Money.format(order.total)}',
+                align: TextAlign.center,
+                style: AppTextStyles.button,
+              ),
+            ),
+          ),
+        ],
+        if (order.canCancel) ...[
+          Gap(order.canPay ? 12 : 24),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(

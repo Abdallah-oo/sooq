@@ -20,6 +20,7 @@ class PaymentMethodTile extends StatelessWidget {
   IconData get _icon => switch (method) {
     PaymentMethod.cod => Icons.payments_outlined,
     PaymentMethod.card => Icons.credit_card_rounded,
+    PaymentMethod.wallet => Icons.account_balance_wallet_outlined,
   };
 
   @override
@@ -45,7 +46,18 @@ class PaymentMethodTile extends StatelessWidget {
                 Icon(_icon, color: selected ? AppColors.primary : AppColors.grey500),
                 const Gap(12),
                 Expanded(
-                  child: CustomText(text: method.label, style: AppTextStyles.titleSmall),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(text: method.label, style: AppTextStyles.titleSmall),
+                      const Gap(2),
+                      CustomText(
+                        text: method.description,
+                        maxLines: 2,
+                        style: AppTextStyles.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
                 Icon(
                   selected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,

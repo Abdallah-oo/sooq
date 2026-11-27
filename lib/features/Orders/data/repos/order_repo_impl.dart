@@ -63,6 +63,7 @@ class OrderRepoImpl implements OrderRepo {
       );
       return Right(OrderModel.fromJson(Map<String, dynamic>.from(response as Map)));
     } catch (e) {
+      print('Error In payment with wallet : $e');
       return Left(SupabaseErrorHandler.handleSupabaseError(e));
     }
   }

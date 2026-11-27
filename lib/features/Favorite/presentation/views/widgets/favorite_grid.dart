@@ -222,7 +222,7 @@ class _FavoritesCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CustomText(
-                          text: '\$${product.price.toStringAsFixed(0)}',
+                          text: 'EGP${product.price.toStringAsFixed(0)}',
                           style: AppTextStyles.titleSmall.copyWith(
                             color: AppColors.primary,
                           ),

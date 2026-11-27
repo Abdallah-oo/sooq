@@ -48,8 +48,13 @@ class CheckoutView extends StatelessWidget {
         listener: (context, state) {
           final order = state.placedOrder;
           if (order != null) {
+            // The order exists server-side now, so the cart is done either way.
             context.read<CartCubit>().clearCart();
-            context.pushReplacement(Routes.orderSuccess, extra: order);
+            // Card / wallet orders go to the payment screen first.
+            context.pushReplacement(
+              order.paymentMethod.isOnline ? Routes.payment : Routes.orderSuccess,
+              extra: order,
+            );
             return;
           }
           CustomSnackBar.error(context, state.placeError!);
@@ -87,11 +92,16 @@ class CheckoutView extends StatelessWidget {
                         onTap: () => _chooseAddress(context),
                       ),
                       const _SectionTitle('Payment method'),
-                      for (final method in PaymentMethod.values.where((m) => m.isAvailable))
-                        PaymentMethodTile(
-                          method: method,
-                          selected: method == state.paymentMethod,
-                          onTap: () => cubit.selectPaymentMethod(method),
+                      for (final method in PaymentMethod.values.where(
+                        (m) => m.isAvailableIn(quote.currencyCode),
+                      ))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: PaymentMethodTile(
+                            method: method,
+                            selected: method == state.paymentMethod,
+                            onTap: () => cubit.selectPaymentMethod(method),
+                          ),
                         ),
                       const _SectionTitle('Promo code'),
                       PromoCodeField(
@@ -168,7 +178,9 @@ class _PlaceOrderBar extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.white),
                       )
                     : CustomText(
-                        text: 'Place order  ·  ${Money.format(quote.total)}',
+                        text: state.paymentMethod.isOnline
+                            ? 'Continue to payment  ·  ${Money.format(quote.total)}'
+                            : 'Place order  ·  ${Money.format(quote.total)}',
                         align: TextAlign.center,
                         style: AppTextStyles.button,
                       ),
