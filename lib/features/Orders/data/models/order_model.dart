@@ -83,9 +83,14 @@ class OrderModel {
     );
   }
 
-  /// Customers can cancel only while the order is pending and unpaid.
+  /// Customers can cancel while the order is pending and nothing was paid
+  /// (a failed online payment counts as unpaid).
   bool get canCancel =>
-      status == OrderStatus.pending && paymentStatus == PaymentStatus.unpaid;
+      status == OrderStatus.pending &&
+      (paymentStatus == PaymentStatus.unpaid || paymentStatus == PaymentStatus.failed);
+
+  /// Online order still waiting for its payment: "Pay now" is offered.
+  bool get canPay => paymentMethod.isOnline && canCancel;
 
   int get itemsCount => items.fold(0, (sum, item) => sum + item.quantity);
 

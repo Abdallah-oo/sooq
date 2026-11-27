@@ -173,7 +173,7 @@ class _SearchResultTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomText(
-                  text: '\$${product.price.toStringAsFixed(2)}',
+                  text: 'EGP${product.price.toStringAsFixed(2)}',
                   style: AppTextStyles.titleSmall.copyWith(color: AppColors.primary),
                 ),
                 const Gap(8),

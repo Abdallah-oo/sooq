@@ -52,8 +52,15 @@ class OrderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                    text: count == 0 ? order.paymentMethod.label : '$count item${count == 1 ? '' : 's'}',
-                    style: AppTextStyles.bodyMedium,
+                    text: order.canPay
+                        ? 'Payment pending'
+                        : (count == 0 ? order.paymentMethod.label : '$count item${count == 1 ? '' : 's'}'),
+                    style: order.canPay
+                        ? AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w600,
+                          )
+                        : AppTextStyles.bodyMedium,
                   ),
                   CustomText(
                     text: Money.format(order.total),

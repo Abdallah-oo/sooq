@@ -17,7 +17,12 @@ class SupabaseErrorHandler {
     'PROMO_INVALID': 'Invalid or expired promo code',
     'PROMO_MIN_ORDER': 'Your order does not reach the minimum amount for this code',
     'PRICE_CHANGED': 'Prices have changed, please review your order',
-    'PAYMENT_METHOD_UNSUPPORTED': 'This payment method is not available yet',
+    'INVALID_PAYMENT_METHOD': 'Please choose a valid payment method',
+    'CURRENCY_UNSUPPORTED': 'Online payment is not available yet',
+    'ORDER_NOT_PAYABLE': 'This order can not be paid online',
+    'PAYMENT_PROVIDER_ERROR': 'Payment service is unavailable, please try again',
+    'SERVER_MISCONFIGURED': 'Payment service is not ready yet',
+    'SERVER_ERROR': 'Something went wrong, please try again',
     'ORDER_NOT_FOUND': 'Order not found',
     'ORDER_NOT_CANCELLABLE': 'This order can no longer be cancelled',
   };
@@ -43,6 +48,16 @@ class SupabaseErrorHandler {
       }
 
       return SupabaseError(message: e.message);
+    }
+
+    // Edge Functions answer errors as { "error": "CODE" } (see supabase/functions).
+    if (e is FunctionException) {
+      debugPrint('FunctionException(${e.status}): ${e.details}');
+      final details = e.details;
+      final code = details is Map ? details['error'] : null;
+      return SupabaseError(
+        message: _businessMessages[code] ?? 'Payment service is unavailable, please try again',
+      );
     }
 
     if (e is PostgrestException) {

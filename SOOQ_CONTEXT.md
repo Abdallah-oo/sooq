@@ -39,6 +39,8 @@ These rules are mandatory in every conversation.
 10. **Git branch name on every delivery.** Each delivery starts with the branch name to create, using `feature/phase-N-short-name` (kebab-case, English). Fixes found while testing a delivered phase use `fix/phase-N-short-description`. Also give a one-line Conventional Commit message (e.g. `feat(address): add map picker and address book`). Branch is created from the latest `main` after the previous phase was merged.
 11. If something in the existing code is wrong or risky, say so briefly and fix it as part of the relevant phase, do not silently work around it.
 
+12. **Server code is part of every delivery.** SQL goes in `supabase/migrations/`, Edge Functions in `supabase/functions/` (with their tests and README). Money-related SQL is reviewed line by line and logic that can run without Supabase (e.g. HMAC helpers) is tested locally. State clearly what could NOT be executed in the assistant sandbox.
+
 ---
 
 ## 3. Decisions Already Made
@@ -58,15 +60,19 @@ Settled in Phase 2:
 - **Promo codes live in `promo_codes`** (percent, min order, max uses, dates, active). Customers cannot read the table; they validate through the RPCs. Seeded with TABANJA1/2/3 = 10/20/15 %.
 - Order business errors are raised in SQL as plain codes (`raise exception 'PROMO_INVALID'`) and mapped to messages in `SupabaseErrorHandler._businessMessages`.
 
-Open decisions for Phase 3 (ask the owner when it starts):
-- **Currency:** Paymob only charges in **EGP** (amounts in piasters). Decide the final currency and update `app_settings` (currency_code, fee, threshold), product prices if needed, and `Money.symbol`.
-- Paymob account details: API key, integration IDs (card / wallet), iframe ID, HMAC secret (these go in Edge Function secrets only), and whether to use the hosted iframe in a WebView or the native SDK.
+Settled in Phase 3:
+- **Paymob Intention API + Unified Checkout** (hosted page opened in an in-app WebView). The secret key never reaches the app; card / wallet details are typed on Paymob's page.
+- **Methods:** cash on delivery, card, mobile wallet (separate Paymob integration ids; the Edge Function sends only the integration of the chosen method).
+- **Currency: EGP.** Product prices are already in EGP. Online methods exist only when `app_settings.currency_code = 'EGP'` (server rejects with `CURRENCY_UNSUPPORTED`, app hides them). The owner changes `app_settings` (fee / threshold) and the `$` symbol themselves.
+- **The webhook is the only source of truth for payment status.** The redirect back from Paymob is just a signal: the app polls the order (every 2 s, up to 10 times) until `payment_status` becomes paid / failed.
+- **Amounts are never taken from the client:** `create-payment` reads `orders.total`; `apply_payment_result` rejects a "paid" callback whose amount / currency differs from the order.
+- Order lifecycle for online payment: order is created `pending` + `unpaid`; paid orders stay `pending` until the store confirms (dashboard phase). Customers can cancel only while nothing was paid (unpaid or failed). Unpaid online orders can be expired by `expire_unpaid_online_orders` (pg_cron, optional).
 
 ---
 
 ## 4. Tech Stack and Architecture (as it exists)
 
-**Dependencies (key ones):** `flutter_bloc` (Cubit), `go_router`, `get_it`, `dartz`, `supabase_flutter`, `hive_ce` + `hive_ce_flutter`, `shared_preferences`, `cached_network_image`, `skeletonizer`, `shimmer`, `gap`, `image_picker`, `image_cropper`, `permission_handler`, `gal`, `http`.
+**Dependencies (key ones):** `flutter_bloc` (Cubit), `go_router`, `get_it`, `dartz`, `supabase_flutter`, `hive_ce` + `hive_ce_flutter`, `shared_preferences`, `cached_network_image`, `skeletonizer`, `shimmer`, `gap`, `image_picker`, `image_cropper`, `permission_handler`, `gal`, `http`, `flutter_map`, `latlong2`, `geolocator`, `webview_flutter`.
 SDK: Dart `^3.9.0`.
 
 **Layout (feature-first Clean Architecture):**
@@ -76,6 +82,7 @@ lib/
 ├── main.dart                 # Hive init -> Supabase.initialize -> setUpGetIt() -> runApp
 ├── sooq_app.dart             # MultiBlocProvider(CartCubit, FavoritesCubit) + MaterialApp.router
 ├── root.dart                 # Bottom nav shell (IndexedStack: Home, Fav, Search, Profile)
+├── (repo root) supabase/  migrations/NNN_*.sql, functions/{_shared,create-payment,paymob-webhook}/ + README.md
 ├── core/
 │   ├── config/               # map_config.dart (tiles, geocoder, defaults, user-agent)
 │   ├── routing/              # app_router.dart (GoRouter, `_fadePage` helper), routes.dart
@@ -85,7 +92,7 @@ lib/
 │   ├── utils/                # CustomButton, CustomText, CustomSnackBar, validators, money.dart (Money.format), app_date.dart, di/get_it.dart, ld/pref_helper.dart
 │   └── widgets/              # AppNetworkImage, MessageState (empty / error state)
 └── features/
-    ├── Address/   Auth/  Cart/  Checkout/  Favorite/  Home/  On_Boarding/  Orders/  Profile/  Search/
+    ├── Address/   Auth/  Cart/  Checkout/  Favorite/  Home/  On_Boarding/  Orders/  Payment/  Profile/  Search/
     └── (each: data/{models,repos,local}  presentation/{cubits,views,views/widgets})
 ```
 
@@ -127,6 +134,8 @@ lib/
 - Functions (all `security definer`, `search_path = public`): `calculate_order` (internal, no client access), `quote_order`, `place_order` (COD only for now), `cancel_order` (pending + unpaid only). Error codes: NOT_AUTHENTICATED, EMPTY_CART, INVALID_ITEMS, PRODUCT_UNAVAILABLE, ADDRESS_NOT_FOUND, ADDRESS_PHONE_REQUIRED, PROMO_INVALID, PROMO_MIN_ORDER, PRICE_CHANGED, PAYMENT_METHOD_UNSUPPORTED, ORDER_NOT_FOUND, ORDER_NOT_CANCELLABLE.
 - RLS: customers read own orders / items; admin reads all; **no client insert/update/delete** on orders or order_items. `app_settings` is readable by everyone, writable by admin. `promo_codes` admin-only. Admin status updates need a policy in the dashboard phase.
 - `products.id` is `uuid`.
+- Migration `004_payments.sql`: `orders.paymob_intention_id`, `orders.paymob_order_id`, `orders.paid_at`; table `payment_transactions` (PK `(transaction_id, status)`, `accepted` flag, trimmed audit `raw`, admin read only); function `apply_payment_result` (service role only; idempotent; returns paid | paid_on_cancelled | failed | refunded | duplicate | amount_mismatch | order_not_found); `place_order` now accepts cod | card | wallet (INVALID_PAYMENT_METHOD, CURRENCY_UNSUPPORTED); `cancel_order` also allows failed payments; `expire_unpaid_online_orders(minutes)` (service role only).
+- **Edge Functions** (`supabase/functions/`): `create-payment` (JWT required; loads the caller's own order through RLS, creates the intention, returns `{checkout_url, return_url}`), `paymob-webhook` (deployed with `--no-verify-jwt`; verifies HMAC-SHA512 over the 20 documented fields, then calls `apply_payment_result`). Shared helpers + Deno tests in `_shared/`. Secrets: `PAYMOB_SECRET_KEY`, `PAYMOB_PUBLIC_KEY`, `PAYMOB_HMAC_SECRET`, `PAYMOB_CARD_INTEGRATION_ID`, `PAYMOB_WALLET_INTEGRATION_ID` (+ optional `PAYMOB_BASE_URL`, `PAYMOB_RETURN_URL`). Error codes returned to the app: NOT_AUTHENTICATED, INVALID_REQUEST, ORDER_NOT_FOUND, ORDER_NOT_PAYABLE, CURRENCY_UNSUPPORTED, PAYMENT_PROVIDER_ERROR, SERVER_MISCONFIGURED, SERVER_ERROR.
 
 **To verify:** RLS policies on `categories`, `products`, `banners` (must be public read, admin-only write once the dashboard exists). Policies need an admin write path for the dashboard.
 
@@ -140,8 +149,8 @@ Supabase URL and anon key live in `lib/core/services/supabase/supabase_constants
 |---|---|---|---|
 | 0 | **Foundation** | Done (owner testing in parallel) | See Changelog |
 | 1 | **Addresses + Map** | Done (owner testing in parallel) | `addresses` table + RLS; map picker (`flutter_map`, OSM); current location via `geolocator`; reverse geocoding; My Addresses list/add/edit/delete/set default; wire Profile -> My Addresses |
-| 2 | **Orders + Checkout** | Code delivered, **waiting for owner's test + analyze** | `orders`, `order_items`, status enum; RPC `place_order` (server-side pricing, address snapshot, promo validation); Checkout screen (address + payment method + summary); real order placement; My Orders + order details; persist cart locally (Hive) |
-| 3 | **Payment (Paymob)** | Not started | `PaymentGateway` interface; Edge Function `create-payment` (auth -> Paymob order + payment key); WebView/SDK flow in app; Edge Function `paymob-webhook` (verify HMAC, update `orders.payment_status`); Cash on Delivery path; failure/retry handling |
+| 2 | **Orders + Checkout** | Done (owner testing in parallel) | `orders`, `order_items`, status enum; RPC `place_order` (server-side pricing, address snapshot, promo validation); Checkout screen (address + payment method + summary); real order placement; My Orders + order details; persist cart locally (Hive) |
+| 3 | **Payment (Paymob)** | Code delivered, **waiting for owner's end-to-end test (Paymob test mode)** | `PaymentGateway` interface; Edge Function `create-payment` (auth -> Paymob order + payment key); WebView/SDK flow in app; Edge Function `paymob-webhook` (verify HMAC, update `orders.payment_status`); Cash on Delivery path; failure/retry handling |
 | 4 | **Admin Dashboard** (`sooq_admin`, Flutter Web) | Not started | Admin login (role check); realtime orders table with filters; order details; change status; basic stats; later: products/categories management |
 | 5 | **Order Tracking (customer)** | Not started | Realtime status updates, status timeline, push notification hook (later) |
 
@@ -154,14 +163,14 @@ Planned schema sketches (refine at phase start, do not treat as final):
 
 ## 7. Current Status
 
-- Phases 0 and 1 delivered; owner testing them in parallel.
-- Phase 2 (Orders + Checkout) delivered: Cart -> Checkout (address via `Routes.addresses` with `extra: true`, COD, server-validated promo code, server-priced summary) -> `place_order` -> Order success -> My Orders / Order details (+ cancel while pending). Cart is persisted in Hive and survives app restarts; the cart sheet now shows only the subtotal and a "Proceed to checkout" button.
-- Phase 2 needs from owner: run `003_orders.sql`, `flutter pub get && flutter analyze`, manual test (see test checklist in the delivery message).
+- Phases 0-2 delivered; owner testing them in parallel.
+- Phase 3 (Paymob) delivered. Flow: Checkout (choose COD / Card / Wallet) -> `place_order` (online orders start unpaid) -> payment screen (`Routes.payment`, extra: `OrderModel`) -> `create-payment` -> Paymob page in a WebView -> redirect detected -> app polls the order -> webhook marks it paid -> success screen. Unpaid / failed online orders show "Payment pending" in My Orders and a **Pay now** button in the order details.
+- Phase 3 needs from owner: set `app_settings` to EGP, run `004_payments.sql`, `flutter pub add webview_flutter`, set the 5 secrets, deploy both Edge Functions (`paymob-webhook` with `--no-verify-jwt`), set the callback URL in the Paymob dashboard, `flutter analyze`, then test with Paymob test cards / wallet (checklist in the delivery message).
 
 ## 8. Next Action
 
-1. Get the results of Phase 1 and Phase 2 testing (analyze output, bugs, screenshots if UI needs tweaks). Fix them first on `fix/phase-N-...` branches.
-2. Then start **Phase 3 (Paymob)** on branch `feature/phase-3-paymob`. Ask the owner the open decisions first (currency EGP, Paymob credentials and integration type). Plan: `004_payments.sql` (paymob columns on `orders`, `payment_events` log, allow `card`/`wallet` in `place_order`, cancel rules for paid orders), `PaymentGateway` interface, Edge Function `create-payment` (auth -> create Paymob order + payment key), WebView flow in the app, Edge Function `paymob-webhook` (verify HMAC, idempotent update of `payment_status`), failure / retry handling, add Card to `PaymentMethod.isAvailable`.
+1. Get the results of the Phase 1-3 tests (analyze output, bugs, screenshots) and fix them first on `fix/phase-N-...` branches. Phase 3 especially: confirm the webhook is received (Supabase Dashboard -> Edge Functions -> Logs) and that a paid test order flips to `paid`.
+2. Then start **Phase 4 (Admin Dashboard)** on branch `feature/phase-4-admin-dashboard`: separate Flutter Web project `sooq_admin` using the same Supabase project. Ask the owner first: where to host it (Firebase Hosting / Vercel / Supabase-less static host), scope of v1 (orders only vs products + categories + promo codes + settings), and who gets admin (`profiles.role`). Plan: `005_admin.sql` (admin policies: update `orders.status` through a guarded RPC `admin_set_order_status` with allowed transitions, admin CRUD on products / categories / promo_codes / app_settings, add `orders` to the `supabase_realtime` publication), admin login with role check (sign out non-admins), realtime orders table with filters (status, payment, date), order details with status actions, basic stats (today's orders, revenue from paid orders, pending count), refund visibility (`paid_on_cancelled`, `amount_mismatch` transactions).
 
 ---
 
@@ -187,9 +196,27 @@ Planned schema sketches (refine at phase start, do not treat as final):
 - The cart is per device: it is cleared on logout, not synced between devices.
 - Checkout address selection needs one tap on a card in the list (even right after adding a new address).
 
+- The assistant could not execute SQL or Edge Functions (no Postgres / Deno in its sandbox). `003` and `004` were reviewed by hand and the Paymob helpers were tested under Node against Paymob's documented HMAC sample. If any SQL errors on first run, send the message and fix it on a `fix/phase-N-...` branch.
+- No refund flow in the app: refunds are done from the Paymob dashboard and arrive through the webhook (`payment_status = 'refunded'`). `paid_on_cancelled` / `amount_mismatch` need manual review (Edge Function logs + `payment_transactions`).
+- A retry from "Pay now" uses the order's original method (card or wallet); switching method on retry is not supported.
+- `PAYMOB_RETURN_URL` defaults to `https://sooq.app/payment-return`, a placeholder that the WebView intercepts and never loads. Replace with a real page if the redirect ever needs to work outside the app.
+- Test and live Paymob keys, integration ids and HMAC secret must be switched together at go-live (see `supabase/functions/README.md`).
+- Product cards and other old widgets still show `$`; `Money.symbol` is a constant. Owner is changing the currency symbol.
+
 ---
 
 ## 10. Changelog
+
+### Phase 3 — Payment (Paymob) (2026-11-25)
+
+**Branch:** `feature/phase-3-paymob`
+**SQL:** `supabase/migrations/004_payments.sql`. **New package:** `webview_flutter`. **Edge Functions:** `create-payment`, `paymob-webhook` (+ `_shared/{cors,paymob,paymob_test}.ts`, `README.md`).
+
+**New files:** `features/Payment/` (`data/models/payment_session.dart`, `data/repos/{payment_repo,payment_repo_impl}.dart`, `presentation/cubit/payment_{cubit,state}.dart`, `presentation/views/payment_view.dart`, `presentation/views/widgets/paymob_web_view.dart`) and everything under `supabase/functions/`.
+
+**Modified files:** `core/routing/{routes,app_router}.dart` (payment route), `core/utils/di/get_it.dart` (PaymentRepo), `core/services/supabase/errors/supabase_error_handler.dart` (FunctionException + payment codes), `features/Orders/data/models/{order_enums,order_model,order_quote}.dart` (wallet method, `isOnline`, `isAvailableIn`, `canPay`, `currencyCode`), `features/Orders/presentation/views/{order_details_view,order_success_view}.dart` and `widgets/order_card.dart` (Pay now, payment status), `features/Checkout/presentation/views/checkout_view.dart` and `widgets/payment_method_tile.dart` (3 methods, descriptions, branch to the payment screen).
+
+**Design notes:** the redirect from Paymob is only a signal, the order is polled until the signed webhook has updated it; a stale `failed` from an earlier attempt is not mistaken for the current attempt's result; callbacks are idempotent (`payment_transactions` PK) and amount-checked inside one DB transaction with the order row locked; Paymob's `special_reference` is `<order uuid>_<timestamp>` so retries never collide and the webhook can map any callback to its order.
 
 ### Phase 2 — Orders + Checkout (2026-11-25)
 

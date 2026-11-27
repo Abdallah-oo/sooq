@@ -7,6 +7,7 @@ class OrderQuote {
     required this.deliveryFee,
     required this.total,
     required this.freeDeliveryThreshold,
+    required this.currencyCode,
     this.promoCode,
   });
 
@@ -16,6 +17,9 @@ class OrderQuote {
   final double deliveryFee;
   final double total;
   final double freeDeliveryThreshold;
+
+  /// From `app_settings.currency_code` (online payment needs EGP).
+  final String currencyCode;
 
   /// The promo code the server accepted (null when none is applied).
   final String? promoCode;
@@ -28,6 +32,7 @@ class OrderQuote {
       deliveryFee: (json['delivery_fee'] as num).toDouble(),
       total: (json['total'] as num).toDouble(),
       freeDeliveryThreshold: (json['free_delivery_threshold'] as num).toDouble(),
+      currencyCode: json['currency_code'] as String? ?? 'EGP',
       promoCode: json['promo_code'] as String?,
     );
   }

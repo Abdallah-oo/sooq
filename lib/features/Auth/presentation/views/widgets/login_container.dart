@@ -29,8 +29,8 @@ class _LoginContainerState extends State<LoginContainer> {
 
   @override
   void initState() {
-    _emailController = TextEditingController(text: 'a@gmail.com');
-    _passwordController = TextEditingController(text: 'Aa@012100');
+    _emailController = TextEditingController(text: 'Abdallah81786417@gmail.com');
+    _passwordController = TextEditingController(text: 'Abdallah@012100');
 
     super.initState();
   }

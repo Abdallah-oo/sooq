@@ -54,7 +54,7 @@ class CartItemCard extends StatelessWidget {
                     CustomText(text: item.product.name, style: AppTextStyles.labelLarge),
                     const Gap(4),
                     CustomText(
-                      text: '\$${item.product.price.toStringAsFixed(2)} each',
+                      text: 'EGP${item.product.price.toStringAsFixed(2)} each',
                       style: AppTextStyles.bodyMedium,
                     ),
                     const Gap(10),
@@ -65,7 +65,7 @@ class CartItemCard extends StatelessWidget {
                         _QuantityControl(item: item),
                         const Spacer(),
                         CustomText(
-                          text: '\$${subtotal.toStringAsFixed(2)}',
+                          text: 'EGP${subtotal.toStringAsFixed(2)}',
                           style: AppTextStyles.titleSmall.copyWith(color: AppColors.primary),
                         ),
                       ],
